@@ -14,5 +14,10 @@ with open("data.csv", "r") as csvfile, open("data_clean.csv", "w") as csvcleanfi
                 if row.count("---") < names[row[1]]:
                     names[row[1]] = row
 
+    order = ["/sets/", "/setsTD/", "/good/", "/nonbenzo/"]
     for name in names:
-        writer.writerow(names[name])
+        num = -1
+        for i, x in enumerate(order):
+            if x in names[name][0]:
+                num = i
+        writer.writerow([num] + names[name])
