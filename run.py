@@ -25,25 +25,38 @@ for i, (name, feat, occ, virt, orb, dip, eng, gap) in enumerate(data):
     DIPOLE[i] = dip
     ENERGY[i] = eng
     GAP[i] = gap
+X = numpy.matrix(FEATURES)
 
-print M
 def get_weight(X, y, limit=400):
     Xin = X[:limit,  :]
     Xout = X[limit:, :]
     yin = y[:limit,  :]
     yout = y[limit:, :]
     W = numpy.linalg.pinv(Xin.T*Xin)*Xin.T*yin
-    print numpy.abs(yin-Xin*W).mean(), numpy.abs(yout-Xout*W).mean()
-    return W
+    error = numpy.abs(yin-Xin*W).mean()
+    cross_error = numpy.abs(yout-Xout*W).mean()
+    return W, error, cross_error
 
-X = numpy.matrix(FEATURES)
-WG = get_weight(X, GAP)
-WH = get_weight(X, HOMO)
-WL = get_weight(X, LUMO)
-WD = get_weight(X, DIPOLE)
-WE = get_weight(X, ENERGY)
+def get_learning_curves(X, y, step=25):
+    for lim in xrange(50, M, 25):
+        W, e1, e2 = get_weight(X, y, limit=lim)
+        print lim, e1, e2
 
-f = numpy.matrix(numpy.concatenate([LUMO-HOMO, numpy.ones(HOMO.shape)],1))
-Wf = get_weight(f, GAP)
-f2 = numpy.matrix(numpy.concatenate([X*WL-X*WH, numpy.ones(HOMO.shape)],1))
-Wf = get_weight(f2, GAP)
+print "Gap"
+get_learning_curves(X, GAP)
+print "HOMO"
+get_learning_curves(X, HOMO)
+print "LUMO"
+get_learning_curves(X, LUMO)
+# WH = get_weight(X, HOMO)
+# WL = get_weight(X, LUMO)
+# WD = get_weight(X, DIPOLE)
+# WE = get_weight(X, ENERGY)
+
+# f = numpy.matrix(numpy.concatenate([LUMO-HOMO, numpy.ones(HOMO.shape)],1))
+# Wf = get_weight(f, GAP)
+# f2 = numpy.matrix(numpy.concatenate([X*WL-X*WH, numpy.ones(HOMO.shape)],1))
+# Wf = get_weight(f2, GAP)
+
+
+
