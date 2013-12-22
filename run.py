@@ -37,18 +37,69 @@ def get_weight(X, y, limit=400):
     cross_error = numpy.abs(yout-Xout*W).mean()
     return W, error, cross_error
 
+def test_it(clf, X, y, limit=400):
+    Xin = X[:limit,  :]
+    Xout = X[limit:, :]
+
+    yin = y[:limit,  :]
+    yout = y[limit:, :]
+    ylist = yin.T.tolist()[0]
+
+    clf.fit(Xin, ylist)
+    temp = numpy.matrix(clf.predict(Xin)).T
+    error = numpy.abs(temp-yin).mean()
+
+    temp = numpy.matrix(clf.predict(Xout)).T
+    cross_error = numpy.abs(temp-yout).mean()
+    return error, cross_error
+
+
 def get_learning_curves(X, y, step=25):
     M, N = X.shape
     for lim in xrange(50, M, step):
         W, e1, e2 = get_weight(X, y, limit=lim)
         print lim, e1, e2
 
-print "Gap"
-get_learning_curves(X, GAP)
-print "HOMO"
-get_learning_curves(X, HOMO)
-print "LUMO"
-get_learning_curves(X, LUMO)
+
+from sklearn import linear_model
+from sklearn import svm
+from sklearn import tree
+
+def test_sklearn(X, y):
+    funcs = {
+        "linear": linear_model.LinearRegression(),
+        "linear ridge .05": linear_model.Ridge(alpha = .05),
+        "linear ridge .5": linear_model.Ridge(alpha = .5),
+        "linear ridge 5": linear_model.Ridge(alpha = 5),
+        "LARS .01": linear_model.LassoLars(alpha=.01),
+        "LARS .1": linear_model.LassoLars(alpha=.1),
+        "LARS 1": linear_model.LassoLars(alpha=1),
+        "svm": svm.SVR(),
+        "svm rbf": svm.SVR(kernel='rbf'),
+        "svm rbf 2": svm.SVR(C=0.1, kernel="rbf", gamma=0.1),
+        "svm rbf 3": svm.SVR(C=20, kernel="rbf", gamma=0.1),
+        "tree": tree.DecisionTreeRegressor(),
+        "tree 1": tree.DecisionTreeRegressor(max_depth=1),
+        "tree 10": tree.DecisionTreeRegressor(max_depth=10),
+        "tree 100": tree.DecisionTreeRegressor(max_depth=100),
+    }
+    ylist = y.T.tolist()[0]
+    for name, clf in funcs.items():
+        print name
+        for lim in xrange(50, M, 25):
+            e1, e2 = test_it(clf, X, y, limit=lim)
+            print lim, e1, e2
+        print
+
+test_sklearn(X, GAP)
+
+
+# print "Gap"
+# get_learning_curves(X, GAP)
+# print "HOMO"
+# get_learning_curves(X, HOMO)
+# print "LUMO"
+# get_learning_curves(X, LUMO)
 # WH = get_weight(X, HOMO)
 # WL = get_weight(X, LUMO)
 # WD = get_weight(X, DIPOLE)
