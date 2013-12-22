@@ -38,7 +38,8 @@ def get_weight(X, y, limit=400):
     return W, error, cross_error
 
 def get_learning_curves(X, y, step=25):
-    for lim in xrange(50, M, 25):
+    M, N = X.shape
+    for lim in xrange(50, M, step):
         W, e1, e2 = get_weight(X, y, limit=lim)
         print lim, e1, e2
 
