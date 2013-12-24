@@ -55,6 +55,7 @@ def get_learning_curves(X, y, step=25):
 from sklearn import linear_model
 from sklearn import svm
 from sklearn import tree
+from sklearn import dummy
 from sklearn import cross_validation
 from sklearn.metrics import mean_absolute_error
 
@@ -71,21 +72,23 @@ def test_clf(X, y, clf, test_size=0.2):
 
 def test_sklearn(X, y):
     funcs = {
+        "dummy": dummy.DummyRegressor(),
         "linear": linear_model.LinearRegression(),
         "linear ridge .05": linear_model.Ridge(alpha = .05),
         "linear ridge .5": linear_model.Ridge(alpha = .5),
         "linear ridge 5": linear_model.Ridge(alpha = 5),
-        "LARS .01": linear_model.LassoLars(alpha=.01),
-        "LARS .1": linear_model.LassoLars(alpha=.1),
-        "LARS 1": linear_model.LassoLars(alpha=1),
-        "svm": svm.SVR(),
-        "svm rbf": svm.SVR(kernel='rbf'),
+        # "LARS .01": linear_model.LassoLars(alpha=.01),
+        # "LARS .1": linear_model.LassoLars(alpha=.1),
+        # "LARS 1": linear_model.LassoLars(alpha=1),
+        # "svm": svm.SVR(),
+        # "svm rbf": svm.SVR(kernel='rbf'),
         "svm rbf 2": svm.SVR(C=0.1, kernel="rbf", gamma=0.1),
         "svm rbf 3": svm.SVR(C=20, kernel="rbf", gamma=0.1),
+        "svm rbf 4": svm.SVR(C=10, kernel="rbf", gamma=0.05),
         "tree": tree.DecisionTreeRegressor(),
-        "tree 1": tree.DecisionTreeRegressor(max_depth=1),
-        "tree 10": tree.DecisionTreeRegressor(max_depth=10),
-        "tree 100": tree.DecisionTreeRegressor(max_depth=100),
+        # "tree 1": tree.DecisionTreeRegressor(max_depth=1),
+        # "tree 10": tree.DecisionTreeRegressor(max_depth=10),
+        # "tree 100": tree.DecisionTreeRegressor(max_depth=100),
     }
 
     for name, clf in funcs.items():
