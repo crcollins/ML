@@ -2,46 +2,36 @@ import csv
 
 import numpy
 
-data = {"test": [], "learn": []}
+data = []
 with open("data_clean.csv", "r") as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='"')
     for id, path, name, exact, feat, opts, occ, virt, orb, dip, eng, gap, time in reader:
-        if id == '1' and feat != '[]':
-            store = "learn"
-        elif id == '2' and feat != '[]':
-            store = "test"
-        else:
-            continue
         try:
-            data[store].append([exact, numpy.matrix(feat), float(occ), float(virt), int(orb), float(dip), float(eng), float(gap)])
+            data.append([exact, numpy.matrix(feat), float(occ), float(virt), int(orb), float(dip), float(eng), float(gap)])
         except:
             pass
 
-def create_vectors(data, store):
-    M = len(data)
-    N = data[0][1].shape[1]
+M = len(data)
+N = data[0][1].shape[1]
 
-    FEATURES = numpy.zeros((M, N))
-    HOMO = numpy.zeros((M, 1))
-    LUMO = numpy.zeros((M, 1))
-    DIPOLE = numpy.zeros((M, 1))
-    ENERGY = numpy.zeros((M, 1))
-    GAP = numpy.zeros((M, 1))
+FEATURES = numpy.zeros((M, N))
+HOMO = numpy.zeros((M, 1))
+LUMO = numpy.zeros((M, 1))
+DIPOLE = numpy.zeros((M, 1))
+ENERGY = numpy.zeros((M, 1))
+GAP = numpy.zeros((M, 1))
 
-    for i, (name, feat, occ, virt, orb, dip, eng, gap) in enumerate(data):
-        FEATURES[i,:] = feat
-        HOMO[i] = occ
-        LUMO[i] = virt
-        DIPOLE[i] = dip
-        ENERGY[i] = eng
-        GAP[i] = gap
-    X = numpy.matrix(FEATURES)
-    store["X"] = X
-    store["GAP"] = GAP
+for i, (name, feat, occ, virt, orb, dip, eng, gap) in enumerate(data):
+    FEATURES[i,:] = feat
+    HOMO[i] = occ
+    LUMO[i] = virt
+    DIPOLE[i] = dip
+    ENERGY[i] = eng
+    GAP[i] = gap
+X = numpy.matrix(FEATURES)
 
-AA = {"test": dict(), "learn": dict()}
-create_vectors(data["learn"], AA["learn"])
-create_vectors(data["test"], AA["test"])
+
+
 
 def get_weight(X, y, limit=400):
     Xin = X[:limit,  :]
@@ -108,15 +98,17 @@ def test_sklearn(X, y):
             print lim, e1, e2
         print
 
-# test_sklearn(AA["learn"]["X"], AA["learn"]["GAP"])
-clf = tree.DecisionTreeRegressor()
-clf.fit(AA["learn"]["X"], AA["learn"]["GAP"])
-temp = numpy.matrix(clf.predict(AA["learn"]["X"])).T
-print numpy.abs(temp-AA["learn"]["GAP"]).mean()
+test_sklearn(X, GAP)
 
-temp = numpy.matrix(clf.predict(AA["test"]["X"])).T
-print numpy.abs(temp-AA["test"]["GAP"]).mean()
+# clf = svm.SVR(C=20, kernel="rbf", gamma=0.1)
+# clf.fit(AA["learn"]["X"], AA["learn"]["GAP"].T.tolist()[0])
+# temp = numpy.matrix(clf.predict(AA["learn"]["X"])).T
+# print numpy.abs(temp-AA["learn"]["GAP"]).mean()
+# print numpy.abs(temp.T-AA["learn"]["GAP"]).mean()
 
+# temp = numpy.matrix(clf.predict(AA["test"]["X"])).T
+# print numpy.abs(temp-AA["test"]["GAP"]).mean()
+# print numpy.abs(temp.T-AA["test"]["GAP"]).mean()
 
 # print "Gap"
 # get_learning_curves(X, GAP)
