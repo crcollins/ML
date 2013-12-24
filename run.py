@@ -43,23 +43,6 @@ def get_weight(X, y, limit=400):
     cross_error = numpy.abs(yout-Xout*W).mean()
     return W, error, cross_error
 
-def test_it(clf, X, y, limit=400):
-    Xin = X[:limit,  :]
-    Xout = X[limit:, :]
-
-    yin = y[:limit,  :]
-    yout = y[limit:, :]
-    ylist = yin.T.tolist()[0]
-
-    clf.fit(Xin, ylist)
-    temp = numpy.matrix(clf.predict(Xin)).T
-    error = numpy.abs(temp-yin).mean()
-
-    temp = numpy.matrix(clf.predict(Xout)).T
-    cross_error = numpy.abs(temp-yout).mean()
-    return error, cross_error
-
-
 def get_learning_curves(X, y, step=25):
     M, N = X.shape
     for lim in xrange(50, M, step):
@@ -67,9 +50,24 @@ def get_learning_curves(X, y, step=25):
         print lim, e1, e2
 
 
+
+
 from sklearn import linear_model
 from sklearn import svm
 from sklearn import tree
+from sklearn import cross_validation
+from sklearn.metrics import mean_absolute_error
+
+def test_clf(X, y, clf, test_size=0.2):
+    ylist = y.T.tolist()[0]
+    train = numpy.zeros(20)
+    cross = numpy.zeros(20)
+    for i in xrange(20):
+        X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, ylist, test_size=test_size)
+        clf.fit(X_train, y_train)
+        train[i] = mean_absolute_error(clf.predict(X_train), y_train)
+        cross[i] = mean_absolute_error(clf.predict(X_test), y_test)
+    return train.mean(), cross.mean()
 
 def test_sklearn(X, y):
     funcs = {
@@ -89,14 +87,12 @@ def test_sklearn(X, y):
         "tree 10": tree.DecisionTreeRegressor(max_depth=10),
         "tree 100": tree.DecisionTreeRegressor(max_depth=100),
     }
-    ylist = y.T.tolist()[0]
-    M, N = X.shape
+
     for name, clf in funcs.items():
         print name
-        for lim in xrange(50, M, 25):
-            e1, e2 = test_it(clf, X, y, limit=lim)
-            print lim, e1, e2
-        print
+        for val in xrange(1, 9):
+            train, test = test_clf(X, y, clf, test_size=val*0.1)
+            print val*0.1, train, test
 
 test_sklearn(X, GAP)
 
