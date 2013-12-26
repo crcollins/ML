@@ -97,12 +97,17 @@ def test_sklearn(X, y):
         # "tree 10": tree.DecisionTreeRegressor(max_depth=10),
         # "tree 100": tree.DecisionTreeRegressor(max_depth=100),
     }
-
+    results = {}
     for name, clf in funcs.items():
         print name
+        train = []
+        test = []
         for val in xrange(1, 9):
-            train, test = test_clf(X, y, clf, test_size=val*0.1)
-            print val*0.1, train, test
+            a,b = test_clf(X, y, clf, test_size=val*0.1)
+            train.append(a)
+            test.append(b)
+        results[name] = (train, test)
+    return results
 
 def scan(X, y, function, params):
     size = [len(x) for x in params.values()]
@@ -120,10 +125,17 @@ def scan(X, y, function, params):
         test_results[idx] = test
     return train_results, test_results
 
+
+
+results = []
 for xset in (X, X2):
+    temp = []
     for yset in (HOMO, LUMO, GAP):
-        test_sklearn(xset, yset)
+        temp.append(test_sklearn(xset, yset))
+    results.append(temp)
     print "\n\n"
+
+
 
 # clf = svm.SVR(C=20, kernel="rbf", gamma=0.1)
 # clf.fit(AA["learn"]["X"], AA["learn"]["GAP"].T.tolist()[0])
