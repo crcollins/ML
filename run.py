@@ -1,4 +1,5 @@
 import csv
+import itertools
 
 import numpy
 
@@ -102,6 +103,22 @@ def test_sklearn(X, y):
         for val in xrange(1, 9):
             train, test = test_clf(X, y, clf, test_size=val*0.1)
             print val*0.1, train, test
+
+def scan(X, y, function, params):
+    size = [len(x) for x in params.values()]
+    train_results = numpy.zeros(size)
+    test_results = numpy.zeros(size)
+    keys = params.keys()
+    values = params.values()
+    for group in itertools.product(*values):
+        idx = tuple([a.index(b) for a,b in zip(values, group)])
+        a = dict(zip(keys, group))
+        clf = function(**a)
+        print a, idx
+        train, test = test_clf(X, y, clf)
+        train_results[idx] = train
+        test_results[idx] = test
+    return train_results, test_results
 
 for xset in (X, X2):
     for yset in (HOMO, LUMO, GAP):
