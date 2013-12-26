@@ -59,6 +59,8 @@ from sklearn import linear_model
 from sklearn import svm
 from sklearn import tree
 from sklearn import dummy
+from sklearn import neighbors
+
 from sklearn import cross_validation
 from sklearn.metrics import mean_absolute_error
 
@@ -77,6 +79,7 @@ def test_sklearn(X, y):
     funcs = {
         "dummy": dummy.DummyRegressor(),
         "linear": linear_model.LinearRegression(),
+        "neighbors": neighbors.KNeighborsRegressor(),
         "linear ridge .05": linear_model.Ridge(alpha = .05),
         "linear ridge .5": linear_model.Ridge(alpha = .5),
         "linear ridge 5": linear_model.Ridge(alpha = 5),
