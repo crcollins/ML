@@ -5,31 +5,34 @@ import numpy
 data = []
 with open("data_clean.csv", "r") as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-    for id, path, name, exact, feat, opts, occ, virt, orb, dip, eng, gap, time in reader:
+    for id, path, name, exact, feat, feat2, opts, occ, virt, orb, dip, eng, gap, time in reader:
         try:
-            data.append([exact, numpy.matrix(feat), float(occ), float(virt), int(orb), float(dip), float(eng), float(gap)])
+            data.append([exact, numpy.matrix(feat), numpy.matrix(feat2),  float(occ), float(virt), int(orb), float(dip), float(eng), float(gap)])
         except:
             pass
 
 M = len(data)
 N = data[0][1].shape[1]
+N2 = data[0][2].shape[1]
 
 FEATURES = numpy.zeros((M, N))
+FEATURES2 = numpy.zeros((M, N2))
 HOMO = numpy.zeros((M, 1))
 LUMO = numpy.zeros((M, 1))
 DIPOLE = numpy.zeros((M, 1))
 ENERGY = numpy.zeros((M, 1))
 GAP = numpy.zeros((M, 1))
 
-for i, (name, feat, occ, virt, orb, dip, eng, gap) in enumerate(data):
+for i, (name, feat, feat2, occ, virt, orb, dip, eng, gap) in enumerate(data):
     FEATURES[i,:] = feat
+    FEATURES2[i,:] = feat2
     HOMO[i] = occ
     LUMO[i] = virt
     DIPOLE[i] = dip
     ENERGY[i] = eng
     GAP[i] = gap
 X = numpy.matrix(FEATURES)
-
+X2 = numpy.matrix(FEATURES2)
 
 
 
@@ -97,7 +100,10 @@ def test_sklearn(X, y):
             train, test = test_clf(X, y, clf, test_size=val*0.1)
             print val*0.1, train, test
 
-test_sklearn(X, GAP)
+for xset in (X, X2):
+    for yset in (HOMO, LUMO, GAP):
+        test_sklearn(xset, yset)
+    print "\n\n"
 
 # clf = svm.SVR(C=20, kernel="rbf", gamma=0.1)
 # clf.fit(AA["learn"]["X"], AA["learn"]["GAP"].T.tolist()[0])
