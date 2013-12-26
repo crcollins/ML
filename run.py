@@ -53,6 +53,15 @@ def get_learning_curves(X, y, step=25):
         W, e1, e2 = get_weight(X, y, limit=lim)
         print lim, e1, e2
 
+def get_high_errors(errors, limit=1.5):
+    aerrors = numpy.abs(errors)
+    mean = aerrors.mean()
+    std = aerrors.std()
+    results = []
+    for x in aerrors.argsort(0)[::-1]:
+        if aerrors[x[0,0]] > (mean + limit * std):
+            results.append((data[x[0,0]][0], aerrors[x[0,0]][0,0]))
+    return results
 
 
 
