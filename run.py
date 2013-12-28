@@ -82,11 +82,11 @@ from sklearn import neighbors
 from sklearn import cross_validation
 from sklearn.metrics import mean_absolute_error
 
-def test_clf(X, y, clf, test_size=0.2):
+def test_clf(X, y, clf, test_size=0.2, num=20):
     ylist = y.T.tolist()[0]
-    train = numpy.zeros(20)
-    cross = numpy.zeros(20)
-    for i in xrange(20):
+    train = numpy.zeros(num)
+    cross = numpy.zeros(num)
+    for i in xrange(num):
         X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, ylist, test_size=test_size)
         clf.fit(X_train, y_train)
         train[i] = mean_absolute_error(clf.predict(X_train), y_train)
