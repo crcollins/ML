@@ -143,16 +143,50 @@ def scan(X, y, function, params):
     return train_results, test_results
 
 
+def sort_xset(xset):
+    temp = {}
+    for yset in xset:
+        for name in yset:
+            zipped = zip(*yset[name])
+            (_, test) = zipped[0]
+            if temp.get(name):
+                temp[name].append(test)
+            else:
+                temp[name] = [test]
+    for key, val in temp.items():
+        temp[key] = sum(val)/len(val)
+    return [y for y in sorted(temp, key=lambda x: temp[x])]
+
+
+def display_sorted_results(results):
+    for xset in results:
+        order = sort_xset(xset)
+        for name in order:
+            print '"' + name + '"'
+            lines = []
+            for yset in xset:
+                for i, (train, test) in enumerate(zip(*yset[name])):
+                    try:
+                        lines[i].extend(['', train, test])
+                    except IndexError:
+                        lines.append(['', train, test])
+            for line in lines:
+                tests = line[2::3]
+                line.extend(['', sum(tests)/len(tests)])
+                print ','.join(str(x) for x in line)
+        print '\n'
+
 
 results = []
-for xset in (X, X2):
+for xset in (X, X2, X3, X4, X5):
     temp = []
     for yset in (HOMO, LUMO, GAP):
         temp.append(test_sklearn(xset, yset))
     results.append(temp)
-    print "\n\n"
 
 
+
+display_sorted_results(results)
 
 # clf = svm.SVR(C=20, kernel="rbf", gamma=0.1)
 # clf.fit(AA["learn"]["X"], AA["learn"]["GAP"].T.tolist()[0])
@@ -179,6 +213,5 @@ for xset in (X, X2):
 # Wf = get_weight(f, GAP)
 # f2 = numpy.matrix(numpy.concatenate([X*WL-X*WH, numpy.ones(HOMO.shape)],1))
 # Wf = get_weight(f2, GAP)
-
 
 
