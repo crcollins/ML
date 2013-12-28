@@ -1,5 +1,6 @@
 import csv
 import itertools
+import multiprocessing
 
 import numpy
 
@@ -177,12 +178,14 @@ def display_sorted_results(results):
         print '\n'
 
 
-results = []
-for xset in (X, X2, X3, X4, X5):
+def multi_func(xset):
     temp = []
     for yset in (HOMO, LUMO, GAP):
         temp.append(test_sklearn(xset, yset))
-    results.append(temp)
+    return temp
+
+pool = multiprocessing.Pool(processes=4)
+results = pool.map(multi_func, (X, X2, X3, X4, X5))
 
 
 
