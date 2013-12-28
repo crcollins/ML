@@ -6,9 +6,9 @@ import numpy
 data = []
 with open("data_clean.csv", "r") as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-    for id, path, name, exact, feat, feat2, opts, occ, virt, orb, dip, eng, gap, time in reader:
+    for id, path, name, exact, feat, feat2, feat3, feat4, feat5, opts, occ, virt, orb, dip, eng, gap, time in reader:
         try:
-            data.append([exact, numpy.matrix(feat), numpy.matrix(feat2),  float(occ), float(virt), int(orb), float(dip), float(eng), float(gap)])
+            data.append([exact, numpy.matrix(feat), numpy.matrix(feat2), numpy.matrix(feat3), numpy.matrix(feat4), numpy.matrix(feat5), float(occ), float(virt), int(orb), float(dip), float(eng), float(gap)])
         except:
             pass
 
@@ -18,15 +18,21 @@ N2 = data[0][2].shape[1]
 
 FEATURES = numpy.zeros((M, N))
 FEATURES2 = numpy.zeros((M, N2))
+FEATURES3 = numpy.zeros((M, N2))
+FEATURES4 = numpy.zeros((M, N2))
+FEATURES5 = numpy.zeros((M, N2))
 HOMO = numpy.zeros((M, 1))
 LUMO = numpy.zeros((M, 1))
 DIPOLE = numpy.zeros((M, 1))
 ENERGY = numpy.zeros((M, 1))
 GAP = numpy.zeros((M, 1))
 
-for i, (name, feat, feat2, occ, virt, orb, dip, eng, gap) in enumerate(data):
+for i, (name, feat, feat2, feat3, feat4, feat5, occ, virt, orb, dip, eng, gap) in enumerate(data):
     FEATURES[i,:] = feat
     FEATURES2[i,:] = feat2
+    FEATURES3[i,:] = feat3
+    FEATURES4[i,:] = feat4
+    FEATURES5[i,:] = feat5
     HOMO[i] = occ
     LUMO[i] = virt
     DIPOLE[i] = dip
@@ -34,7 +40,9 @@ for i, (name, feat, feat2, occ, virt, orb, dip, eng, gap) in enumerate(data):
     GAP[i] = gap
 X = numpy.matrix(FEATURES)
 X2 = numpy.matrix(FEATURES2)
-
+X3 = numpy.matrix(FEATURES3)
+X4 = numpy.matrix(FEATURES4)
+X5 = numpy.matrix(FEATURES5)
 
 
 def get_weight(X, y, limit=400):
