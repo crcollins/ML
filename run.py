@@ -7,9 +7,9 @@ import numpy
 data = []
 with open("data_clean.csv", "r") as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-    for id, path, name, exact, feat, feat2, feat3, feat4, feat5, opts, occ, virt, orb, dip, eng, gap, time in reader:
+    for id, path, name, exact, feat, feat2, feat3, feat4, feat5, feat6, opts, occ, virt, orb, dip, eng, gap, time in reader:
         try:
-            data.append([exact, numpy.matrix(feat), numpy.matrix(feat2), numpy.matrix(feat3), numpy.matrix(feat4), numpy.matrix(feat5), float(occ), float(virt), int(orb), float(dip), float(eng), float(gap)])
+            data.append([exact, numpy.matrix(feat), numpy.matrix(feat2), numpy.matrix(feat3), numpy.matrix(feat4), numpy.matrix(feat5), numpy.matrix(feat6), float(occ), float(virt), int(orb), float(dip), float(eng), float(gap)])
         except:
             pass
 
@@ -22,18 +22,20 @@ FEATURES2 = numpy.zeros((M, N2))
 FEATURES3 = numpy.zeros((M, N2))
 FEATURES4 = numpy.zeros((M, N2))
 FEATURES5 = numpy.zeros((M, N2))
+FEATURES6 = numpy.zeros((M, N2))
 HOMO = numpy.zeros((M, 1))
 LUMO = numpy.zeros((M, 1))
 DIPOLE = numpy.zeros((M, 1))
 ENERGY = numpy.zeros((M, 1))
 GAP = numpy.zeros((M, 1))
 
-for i, (name, feat, feat2, feat3, feat4, feat5, occ, virt, orb, dip, eng, gap) in enumerate(data):
+for i, (name, feat, feat2, feat3, feat4, feat5, feat6, occ, virt, orb, dip, eng, gap) in enumerate(data):
     FEATURES[i,:] = feat
     FEATURES2[i,:] = feat2
     FEATURES3[i,:] = feat3
     FEATURES4[i,:] = feat4
     FEATURES5[i,:] = feat5
+    FEATURES6[i,:] = feat6
     HOMO[i] = occ
     LUMO[i] = virt
     DIPOLE[i] = dip
@@ -44,6 +46,7 @@ X2 = numpy.matrix(FEATURES2)
 X3 = numpy.matrix(FEATURES3)
 X4 = numpy.matrix(FEATURES4)
 X5 = numpy.matrix(FEATURES5)
+X6 = numpy.matrix(FEATURES6)
 
 
 def get_weight(X, y, limit=400):
@@ -185,7 +188,7 @@ def multi_func(xset):
     return temp
 
 pool = multiprocessing.Pool(processes=4)
-results = pool.map(multi_func, (X, X2, X3, X4, X5))
+results = pool.map(multi_func, (X, X2, X3, X4, X5, X6))
 
 
 
