@@ -189,35 +189,6 @@ def multi_func(xset):
 
 pool = multiprocessing.Pool(processes=4)
 results = pool.map(multi_func, (X, X2, X3, X4, X5, X6))
-
-
-
 display_sorted_results(results)
-
-# clf = svm.SVR(C=20, kernel="rbf", gamma=0.1)
-# clf.fit(AA["learn"]["X"], AA["learn"]["GAP"].T.tolist()[0])
-# temp = numpy.matrix(clf.predict(AA["learn"]["X"])).T
-# print numpy.abs(temp-AA["learn"]["GAP"]).mean()
-# print numpy.abs(temp.T-AA["learn"]["GAP"]).mean()
-
-# temp = numpy.matrix(clf.predict(AA["test"]["X"])).T
-# print numpy.abs(temp-AA["test"]["GAP"]).mean()
-# print numpy.abs(temp.T-AA["test"]["GAP"]).mean()
-
-# print "Gap"
-# get_learning_curves(X, GAP)
-# print "HOMO"
-# get_learning_curves(X, HOMO)
-# print "LUMO"
-# get_learning_curves(X, LUMO)
-# WH = get_weight(X, HOMO)
-# WL = get_weight(X, LUMO)
-# WD = get_weight(X, DIPOLE)
-# WE = get_weight(X, ENERGY)
-
-# f = numpy.matrix(numpy.concatenate([LUMO-HOMO, numpy.ones(HOMO.shape)],1))
-# Wf = get_weight(f, GAP)
-# f2 = numpy.matrix(numpy.concatenate([X*WL-X*WH, numpy.ones(HOMO.shape)],1))
-# Wf = get_weight(f2, GAP)
 
 
