@@ -86,6 +86,13 @@ from sklearn import neighbors
 from sklearn import cross_validation
 from sklearn.metrics import mean_absolute_error
 
+from pybrain.tools.shortcuts import buildNetwork
+from pybrain.datasets import SupervisedDataSet
+from pybrain.supervised.trainers import BackpropTrainer
+from pybrain.structure import FeedForwardNetwork
+from pybrain.structure import LinearLayer, SigmoidLayer
+from pybrain.structure import FullConnection
+
 def test_clf(X, y, clf, test_size=0.2, num=20):
     ylist = y.T.tolist()[0]
     train = numpy.zeros(num)
@@ -179,6 +186,27 @@ def display_sorted_results(results):
                 line.extend(['', sum(tests)/len(tests)])
                 print ','.join(str(x) for x in line)
         print '\n'
+
+
+def run_nn(X, y, NN=None, test_size=0.1):
+    X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y.T.tolist()[0], test_size=.1)
+    if NN is None:
+        NN = (153, 600, 300, 1)
+    net = buildNetwork(*NN, bias=True)
+    ds = SupervisedDataSet(X.shape[1], 1)
+    for i, row in enumerate(X_train):
+        ds.addSample(tuple(row), y_train[i])
+    trainer = BackpropTrainer(net, ds)
+    for i in xrange(250):
+        trainer.train()
+        r = []
+        for row in X_test.tolist(): r.append(net.activate(row)[0])
+        results = numpy.matrix(r)
+        r2 = []
+        for row in X_train.tolist(): r2.append(net.activate(row)[0])
+        results2 = numpy.matrix(r2)
+        print i, numpy.abs(results2-y_train).mean(), numpy.abs(results-y_test).mean()
+    return net, ds, trainer
 
 
 def multi_func(xset):
