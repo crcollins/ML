@@ -221,3 +221,20 @@ def main():
     results = pool.map(multi_func, (X, X2, X3, X4, X5, X6))
     display_sorted_results(results)
 
+
+def build_network(layers=None):
+    layerobjects = []
+    for t, n in layers:
+        if t == "sig":
+            layerobjects.append(SigmoidLayer(n))
+        else:
+            layerobjects.append(LinearLayer(n))
+    n = FeedForwardNetwork()
+    n.addInputModule(layerobjects[0])
+    for i, layer in enumerate(layerobjects[1:-1]):
+        n.addModule(layer)
+        connection = FullConnection(layerobjects[i], layerobjects[i+1])
+        n.addConnection(connection)
+    n.addInputModule(layerobjects[-1])
+    n.sortModules()
+    return n
