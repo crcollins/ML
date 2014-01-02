@@ -97,7 +97,7 @@ def test_clf(X, y, clf, test_size=0.2, num=20):
         clf.fit(X_train, y_train)
         train[i] = mean_absolute_error(clf.predict(X_train), y_train)
         cross[i] = mean_absolute_error(clf.predict(X_test), y_test)
-    return train.mean(), cross.mean()
+    return (train.mean(), train.std()), (cross.mean(), cross.std())
 
 def test_sklearn(X, y):
     funcs = {
@@ -144,8 +144,8 @@ def scan(X, y, function, params):
         clf = function(**a)
         print a, idx
         train, test = test_clf(X, y, clf)
-        train_results[idx] = train
-        test_results[idx] = test
+        train_results[idx] = train[0]
+        test_results[idx] = test[0]
     return train_results, test_results
 
 
@@ -156,9 +156,9 @@ def sort_xset(xset):
             zipped = zip(*yset[name])
             (_, test) = zipped[0]
             if temp.get(name):
-                temp[name].append(test)
+                temp[name].append(test[0])
             else:
-                temp[name] = [test]
+                temp[name] = [test[0]]
     for key, val in temp.items():
         temp[key] = sum(val)/len(val)
     return [y for y in sorted(temp, key=lambda x: temp[x])]
@@ -173,13 +173,17 @@ def display_sorted_results(results):
             for yset in xset:
                 for i, (train, test) in enumerate(zip(*yset[name])):
                     try:
-                        lines[i].extend(['', train, test])
+                        lines[i].extend([train, test])
                     except IndexError:
-                        lines.append(['', train, test])
+                        lines.append([train, test])
             for line in lines:
-                tests = line[2::3]
-                line.extend(['', sum(tests)/len(tests)])
-                print ','.join(str(x) for x in line)
+                tests = line[1::2]
+                means = [x[0] for x in tests]
+                stds = [x[1] for x in tests]
+                means.append(sum(means)/len(means))
+                stds.append(sum(stds)/len(stds))
+                spacers = ['', '', '', '']
+                print ','.join(str(x) for x in sum(zip(spacers, means, stds), ()))
         print '\n'
 
 
