@@ -217,9 +217,9 @@ def multi_func(xset):
 
 def main():
     pool = multiprocessing.Pool(processes=4)
-    results = pool.map(multi_func, (X, X2, X3, X4, X5, X6))
+    results = pool.map(multi_func, FEATURES)
     display_sorted_results(results)
-
+    return results
 
 def build_network(layers=None):
     layerobjects = []
