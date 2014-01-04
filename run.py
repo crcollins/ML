@@ -203,6 +203,21 @@ def power_kernel_gen(sigma, p):
     def func(X, Y):
         return numpy.exp(sigma*-cdist(X,Y)**p)
     return func
+
+def multi_func(xset):
+    temp = []
+    for yset in (HOMO, LUMO, GAP):
+        temp.append(test_sklearn(xset, yset))
+    return temp
+
+
+def main():
+    pool = multiprocessing.Pool(processes=4)
+    results = pool.map(multi_func, FEATURES)
+    display_sorted_results(results)
+    return results
+
+
 def run_nn(X, y, NN=None, test_size=0.1):
     X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y.T.tolist()[0], test_size=.1)
     if NN is None:
@@ -224,18 +239,6 @@ def run_nn(X, y, NN=None, test_size=0.1):
     return net, ds, trainer
 
 
-def multi_func(xset):
-    temp = []
-    for yset in (HOMO, LUMO, GAP):
-        temp.append(test_sklearn(xset, yset))
-    return temp
-
-
-def main():
-    pool = multiprocessing.Pool(processes=4)
-    results = pool.map(multi_func, FEATURES)
-    display_sorted_results(results)
-    return results
 
 def build_network(layers=None):
     layerobjects = []
