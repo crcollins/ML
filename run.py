@@ -187,6 +187,22 @@ def display_sorted_results(results):
         print '\n'
 
 
+
+def gauss_kernel_gen(sigma):
+    def func(X, Y):
+        return numpy.exp(sigma*-cdist(X,Y)**2)
+    return func
+
+
+def laplace_kernel_gen(sigma):
+    def func(X, Y):
+        return numpy.exp(sigma*-cdist(X,Y))
+    return func
+
+def power_kernel_gen(sigma, p):
+    def func(X, Y):
+        return numpy.exp(sigma*-cdist(X,Y)**p)
+    return func
 def run_nn(X, y, NN=None, test_size=0.1):
     X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y.T.tolist()[0], test_size=.1)
     if NN is None:
