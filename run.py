@@ -240,19 +240,49 @@ def run_nn(X, y, NN=None, test_size=0.1):
 
 
 
-def build_network(layers=None):
-    layerobjects = []
-    for t, n in layers:
-        if t == "sig":
-            layerobjects.append(SigmoidLayer(n))
-        else:
-            layerobjects.append(LinearLayer(n))
-    n = FeedForwardNetwork()
-    n.addInputModule(layerobjects[0])
-    for i, layer in enumerate(layerobjects[1:-1]):
-        n.addModule(layer)
-        connection = FullConnection(layerobjects[i], layerobjects[i+1])
+class NeuralNet(object):
+    def __init__(self, hidden_layers=None):
+        self.hidden_layers = list(hidden_layers)
+
+    def build_network(self, layers=None):
+        layerobjects = []
+        for item in layers:
+            try:
+                t, n = item
+                if t == "sig":
+                    if n == 0:
+                        continue
+                    layerobjects.append(SigmoidLayer(n))
+            except TypeError:
+                layerobjects.append(LinearLayer(item))
+
+        n = FeedForwardNetwork()
+        n.addInputModule(layerobjects[0])
+
+        for i, layer in enumerate(layerobjects[1:-1]):
+            n.addModule(layer)
+            connection = FullConnection(layerobjects[i], layerobjects[i+1])
+            n.addConnection(connection)
+
+        n.addOutputModule(layerobjects[-1])
+        connection = FullConnection(layerobjects[-2], layerobjects[-1])
         n.addConnection(connection)
-    n.addInputModule(layerobjects[-1])
-    n.sortModules()
-    return n
+
+        n.sortModules()
+        return n
+
+    def fit(self, X, y):
+        n = X.shape[1]
+        self.nn = self.build_network([n]+self.hidden_layers+[1])
+        ds = SupervisedDataSet(n, 1)
+        for i, row in enumerate(X):
+            ds.addSample(row.tolist(), y[i])
+        trainer = BackpropTrainer(self.nn, ds)
+        for i in xrange(100):
+            trainer.train()
+
+    def predict(self, X):
+        r = []
+        for row in X.tolist():
+            r.append(self.nn.activate(row)[0])
+        return numpy.array(r)
