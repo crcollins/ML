@@ -9,18 +9,18 @@ data = []
 with open("data_clean.csv", "r") as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='"')
     for row in reader:
-            temp = [row[3]]
-            for item in row[4:]:
-                try:
-                    x = ast.literal_eval(item)
-                    if x == []:
-                        break
-                    temp.append(x)
-                except:
-                    pass
+        temp = [row[3]]
+        for item in row[4:]:
+            try:
+                x = ast.literal_eval(item)
+                if x == []:
+                    break
+                temp.append(x)
+            except:
+                pass
 
-            if len(temp) == 9:
-                data.append(temp)
+        if len(temp) == 9:
+            data.append(temp)
 
 M = len(data)
 
