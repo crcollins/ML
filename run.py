@@ -99,6 +99,21 @@ def test_clf(X, y, clf, test_size=0.2, num=20):
         cross[i] = mean_absolute_error(clf.predict(X_test), y_test)
     return (train.mean(), train.std()), (cross.mean(), cross.std())
 
+
+def test_clf_kfold(X, y, clf, folds=10):
+    train = numpy.zeros(folds)
+    cross = numpy.zeros(folds)
+    for i, (train_idx, test_idx) in enumerate(cross_validation.KFold(y.shape[0], n_folds=folds)):
+        X_train = X[train_idx]
+        X_test = X[test_idx]
+        y_train = y[train_idx].T.tolist()[0]
+        y_test = y[test_idx].T.tolist()[0]
+        clf.fit(X_train, y_train)
+        train[i] = mean_absolute_error(clf.predict(X_train), y_train)
+        cross[i] = mean_absolute_error(clf.predict(X_test), y_test)
+    return (train.mean(), train.std()), (cross.mean(), cross.std())
+
+
 def test_sklearn(X, y):
     funcs = {
         "dummy": dummy.DummyRegressor(),
@@ -127,6 +142,9 @@ def test_sklearn(X, y):
         test = []
         for val in xrange(1, 9):
             a,b = test_clf(X, y, clf, test_size=val*0.1)
+        for val in xrange(1, 2):
+            # a,b = test_clf(X, y, clf, test_size=val*0.1, num=100)
+            a,b = test_clf_kfold(X, y, clf, folds=10)
             train.append(a)
             test.append(b)
         results[name] = (train, test)
