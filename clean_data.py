@@ -8,11 +8,12 @@ with open("data.csv", "r") as csvfile, open("data_clean.csv", "w") as csvcleanfi
         if row == []:
             continue
         if row.count("---") <= 2:
-            if not names.get(row[1]):
-                names[row[1]] = row
+            if not names.get(row[2]):
+                names[row[2]] = row
             else:
-                if row.count("---") < names[row[1]]:
-                    names[row[1]] = row
+                if row.count("---") < names[row[2]]:
+                    names[row[2]] = row
+
 
     order = ["/sets/", "/setsTD/", "/good/", "/nonbenzo/"]
     for name in names:
