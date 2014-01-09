@@ -71,6 +71,17 @@ def get_high_errors(errors, limit=1.5):
     return results
 
 
+class Linear(object):
+    def __init__(self):
+        self.weights = None
+    def fit(self, X, y):
+        X = numpy.matrix(X)
+        y = numpy.matrix(y).T
+        self.weights = numpy.linalg.pinv(X.T*X)*X.T*y
+    def predict(self, X):
+        X = numpy.matrix(X)
+        return X*self.weights
+
 
 from sklearn import linear_model
 from sklearn import svm
@@ -117,7 +128,7 @@ def test_clf_kfold(X, y, clf, folds=10):
 def test_sklearn(X, y):
     funcs = {
         "dummy": dummy.DummyRegressor(),
-        "linear": linear_model.LinearRegression(),
+        "linear": Linear(),
         "neighbors": neighbors.KNeighborsRegressor(),
         "linear ridge .05": linear_model.Ridge(alpha = .05),
         "linear ridge .5": linear_model.Ridge(alpha = .5),
