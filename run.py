@@ -359,7 +359,7 @@ def func(layers):
 import matplotlib.pyplot as plt
 from sklearn import decomposition
 
-def PCA_stuff(X, y):
+def PCA_stuff(X, y, title="Principal Component Analysis"):
     pca = decomposition.PCA(n_components=2)
     pca.fit(X)
     print pca.explained_variance_ratio_, sum(pca.explained_variance_ratio_)
@@ -369,10 +369,13 @@ def PCA_stuff(X, y):
     COLOR = (y-y.min())/y.max()
     cm = plt.get_cmap("HOT")
     plt.scatter(Xs, Ys, c=COLOR,s=80, marker='o', edgecolors='none')
+    plt.title(title)
+    plt.xlabel("PCA 1")
+    plt.ylabel("PCA 2")
     plt.show()
     plt.clf()
 
-def PCA_stuff_3d(X, y):
+def PCA_stuff_3d(X, y, title="Principal Component Analysis"):
     pca = decomposition.PCA(n_components=3)
     pca.fit(X)
     print pca.explained_variance_ratio_, sum(pca.explained_variance_ratio_)
@@ -385,6 +388,7 @@ def PCA_stuff_3d(X, y):
     fig = plt.figure(1)
     ax = fig.add_subplot(111, projection='3d')
     ax.scatter(Xs, Ys, Zs, c=COLOR,s=80, marker='o', edgecolors='none')
+    plt.title(title)
     plt.show()
     plt.clf()
 
