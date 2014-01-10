@@ -315,6 +315,8 @@ class NeuralNet(object):
         for row in X.tolist():
             r.append(self.nn.activate(row)[0])
         return numpy.array(r)
+
+
 # clf = NeuralNet([("sig", 250), ("sig", 250)])
 # print test_clf(FEATURES[0], GAP, clf, num=1)
 
@@ -352,4 +354,37 @@ def func(layers):
 # clf.fit(FEATURES[0], GAP.T.tolist()[0])
 # print clf.predict(FEATURES[0])
 # results = main()
+
+
+import matplotlib.pyplot as plt
+from sklearn import decomposition
+
+def PCA_stuff(X, y):
+    pca = decomposition.PCA(n_components=2)
+    pca.fit(X)
+    print pca.explained_variance_ratio_, sum(pca.explained_variance_ratio_)
+    temper = pca.transform(X)
+    Xs = temper[:,0]
+    Ys = temper[:,1]
+    COLOR = (y-y.min())/y.max()
+    cm = plt.get_cmap("HOT")
+    plt.scatter(Xs, Ys, c=COLOR,s=80, marker='o', edgecolors='none')
+    plt.show()
+    plt.clf()
+
+def PCA_stuff_3d(X, y):
+    pca = decomposition.PCA(n_components=3)
+    pca.fit(X)
+    print pca.explained_variance_ratio_, sum(pca.explained_variance_ratio_)
+    temper = pca.transform(X)
+    Xs = temper[:,0]
+    Ys = temper[:,1]
+    Zs = temper[:,2]
+    COLOR = (y-y.min())/y.max()
+    cm = plt.get_cmap("HOT")
+    fig = plt.figure(1)
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(Xs, Ys, Zs, c=COLOR,s=80, marker='o', edgecolors='none')
+    plt.show()
+    plt.clf()
 
