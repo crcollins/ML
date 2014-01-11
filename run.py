@@ -5,6 +5,7 @@ import ast
 
 import numpy
 import matplotlib.pyplot as plt
+from scipy.spatial.distance import cdist
 
 from sklearn import decomposition
 from sklearn import linear_model
