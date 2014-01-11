@@ -151,8 +151,6 @@ def test_sklearn(X, y):
         print name
         train = []
         test = []
-        for val in xrange(1, 9):
-            a,b = test_clf(X, y, clf, test_size=val*0.1)
         for val in xrange(1, 2):
             # a,b = test_clf(X, y, clf, test_size=val*0.1, num=100)
             a,b = test_clf_kfold(X, y, clf, folds=10)
