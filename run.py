@@ -185,7 +185,7 @@ def scan(X, y, function, params):
     keys = params.keys()
     values = params.values()
     for group in itertools.product(*values):
-        idx = tuple([a.index(b) for a,b in zip(values, group)])
+        idx = tuple([a.index(b) for a,b in zip(values, group)] if len(a) > 1)
         a = dict(zip(keys, group))
         clf = function(**a)
         print a, idx
