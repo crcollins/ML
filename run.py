@@ -6,6 +6,7 @@ import ast
 import numpy
 import matplotlib.pyplot as plt
 from scipy.spatial.distance import cdist
+import scipy.optimize
 
 from sklearn import decomposition
 from sklearn import linear_model
@@ -192,6 +193,35 @@ def scan(X, y, function, params):
         train_results[idx] = train[0]
         test_results[idx] = test[0]
     return train_results, test_results
+
+
+class OptimizedCLF(object):
+    def __init__(self, X, y, func, params, guess):
+        self.params = params
+        self.guess = guess
+        self.func = func
+        self.X = X
+        self.y = y
+        self.optimized_clf = None
+        self.optimized_params = None
+
+    def __call__(self, *args):
+        a = dict(zip(self.params, *args))
+        clf = self.func(**a)
+        train, test = test_clf_kfold(self.X, self.y, clf)
+        return test[0]
+
+    def get_optimized_clf(self):
+        if self.optimized_clf is not None:
+            return self.optimized_clf
+        results = scipy.optimize.fmin_l_bfgs_b(
+            self, self.guess,
+            bounds=((1e-8, None), (1e-8, None)),
+            approx_grad=True, epsilon=1e-3)
+        self.optimized_params = results[0].tolist()
+        a = dict(zip(self.params, self.optimized_params))
+        self.optimized_clf = self.func(**a)
+        return self.optimized_clf
 
 
 ##########################################
