@@ -212,6 +212,8 @@ class OptimizedCLF(object):
         return test[0]
 
     def get_optimized_clf(self):
+        if not len(self.params):
+            self.optimized_clf = self.func()
         if self.optimized_clf is not None:
             return self.optimized_clf
         results = scipy.optimize.fmin_l_bfgs_b(
