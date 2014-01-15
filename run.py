@@ -196,9 +196,8 @@ def scan(X, y, function, params):
 
 
 class OptimizedCLF(object):
-    def __init__(self, X, y, func, params, guess):
+    def __init__(self, X, y, func, params):
         self.params = params
-        self.guess = guess
         self.func = func
         self.X = X
         self.y = y
@@ -206,22 +205,23 @@ class OptimizedCLF(object):
         self.optimized_params = None
 
     def __call__(self, *args):
-        a = dict(zip(self.params, *args))
+        a = dict(zip(self.params.keys(), *args))
         clf = self.func(**a)
         train, test = test_clf_kfold(self.X, self.y, clf)
         return test[0]
 
     def get_optimized_clf(self):
-        if not len(self.params):
+        if not len(self.params.keys()):
             self.optimized_clf = self.func()
         if self.optimized_clf is not None:
             return self.optimized_clf
+        bounds = ((1e-8, None), ) * len(self.params.keys())
         results = scipy.optimize.fmin_l_bfgs_b(
-            self, self.guess,
-            bounds=((1e-8, None), (1e-8, None)),
+            self, self.params.values(),
+            bounds=bounds,
             approx_grad=True, epsilon=1e-3)
         self.optimized_params = results[0].tolist()
-        a = dict(zip(self.params, self.optimized_params))
+        a = dict(zip(self.params.keys(), self.optimized_params))
         self.optimized_clf = self.func(**a)
         return self.optimized_clf
 
