@@ -435,6 +435,17 @@ def main():
     return results
 
 
+for i, feat in enumerate(FEATURES[1:]):
+    print i
+    homoclf = OptimizedCLF(feat, HOMO, svm.SVR, {"C": 10, "gamma": 0.05}).get_optimized_clf()
+    homoclf.fit(feat, HOMO.T.tolist()[0])
+    HOMOp = numpy.matrix(homoclf.predict(feat)).T
+
+    lumoclf = OptimizedCLF(feat, LUMO, svm.SVR, {"C": 10, "gamma": 0.05}).get_optimized_clf()
+    lumoclf.fit(feat, LUMO.T.tolist()[0])
+    LUMOp = numpy.matrix(lumoclf.predict(feat)).T
+
+    FEATURES.append(numpy.concatenate([feat, HOMOp, LUMOp], 1))
 
 
 if __name__ == "__main__":
