@@ -272,32 +272,21 @@ def test_clf_kfold(X, y, clf, folds=10):
 
 def test_sklearn(X, y):
     funcs = {
-        "dummy": dummy.DummyRegressor(),
-        "linear": Linear(),
-        "neighbors": neighbors.KNeighborsRegressor(),
-        "linear ridge .05": linear_model.Ridge(alpha = .05),
-        "linear ridge .5": linear_model.Ridge(alpha = .5),
-        "linear ridge 5": linear_model.Ridge(alpha = 5),
-        # "LARS .01": linear_model.LassoLars(alpha=.01),
-        # "LARS .1": linear_model.LassoLars(alpha=.1),
-        # "LARS 1": linear_model.LassoLars(alpha=1),
-        # "svm": svm.SVR(),
-        # "svm rbf": svm.SVR(kernel='rbf'),
-        "svm rbf 2": svm.SVR(C=0.1, kernel="rbf", gamma=0.1),
-        "svm rbf 3": svm.SVR(C=20, kernel="rbf", gamma=0.1),
-        "svm rbf 4": svm.SVR(C=10, kernel="rbf", gamma=0.05),
-        "tree": tree.DecisionTreeRegressor(),
-        # "tree 1": tree.DecisionTreeRegressor(max_depth=1),
-        # "tree 10": tree.DecisionTreeRegressor(max_depth=10),
-        # "tree 100": tree.DecisionTreeRegressor(max_depth=100),
+        "dummy": (dummy.DummyRegressor, dict()),
+        "linear": (Linear, dict()),
+        "linear ridge": (linear_model.Ridge, {"alpha": 0.5}),
+        # "neighbors": (neighbors.KNeighborsRegressor, {"n_neighbors": [2, 3, 5, 10]}),
+        "svm gauss": (svm.SVR, {"C": 10, "gamma": 0.05}),
+        "svm laplace": (SVMLaplace, {"C": 10, "gamma": 0.05}),
+        # "tree": (tree.DecisionTreeRegressor, {"max_depth": [1, 5, 10, 50, None]}),
     }
     results = {}
-    for name, clf in funcs.items():
+    for name, (func, params) in funcs.items():
         print name
         train = []
         test = []
         for val in xrange(1, 2):
-            # a,b = test_clf(X, y, clf, test_size=val*0.1, num=100)
+            clf = OptimizedCLF(X, y, func, params).get_optimized_clf()
             a,b = test_clf_kfold(X, y, clf, folds=10)
             train.append(a)
             test.append(b)
