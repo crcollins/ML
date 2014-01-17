@@ -292,10 +292,10 @@ def test_sklearn(X, y):
         "dummy": (dummy.DummyRegressor, dict()),
         "linear": (Linear, dict()),
         "linear ridge": (linear_model.Ridge, {"alpha": 0.5}),
-        # "neighbors": (neighbors.KNeighborsRegressor, {"n_neighbors": [2, 3, 5, 10]}),
+        "neighbors": (neighbors.KNeighborsRegressor, {"n_neighbors": [2, 3, 5, 10]}),
         "svm gauss": (svm.SVR, {"C": 10, "gamma": 0.05}),
         "svm laplace": (SVMLaplace, {"C": 10, "gamma": 0.05}),
-        # "tree": (tree.DecisionTreeRegressor, {"max_depth": [1, 5, 10, 50, None]}),
+        "tree": (tree.DecisionTreeRegressor, {"max_depth": [1, 5, 10, 50, None]}),
     }
     results = {}
     for name, (func, params) in funcs.items():
