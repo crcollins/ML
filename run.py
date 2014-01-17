@@ -228,14 +228,31 @@ class OptimizedCLF(object):
             self.optimized_clf = self.func()
         if self.optimized_clf is not None:
             return self.optimized_clf
-        bounds = ((1e-8, None), ) * len(self.params.keys())
-        results = scipy.optimize.fmin_l_bfgs_b(
-            self, self.params.values(),
-            bounds=bounds,
-            approx_grad=True, epsilon=1e-3)
-        self.optimized_params = results[0].tolist()
-        a = dict(zip(self.params.keys(), self.optimized_params))
-        self.optimized_clf = self.func(**a)
+        listparams = dict((k,v) for k,v in self.params.items() if type(v) in [list, tuple])
+        itemparams = dict((k,v) for k,v in self.params.items() if type(v) not in [list, tuple])
+        listvalues = []
+        itemvalues = []
+        if listparams:
+            _, test = scan(self.X, self.y, self.func, listparams)
+            listvalues = []
+            for i, pick in enumerate(listparams.values()):
+                try:
+                    temp = (test==test.min()).sum(i).tolist().index(1)
+                except AttributeError:
+                    temp = (test==test.min()).tolist().index(1)
+                listvalues.append(pick[temp])
+            listvalues = listvalues[::-1]
+        if itemparams:
+            bounds = ((1e-8, None), ) * len(self.params.keys())
+            results = scipy.optimize.fmin_l_bfgs_b(
+                self, self.params.values(),
+                bounds=bounds,
+                approx_grad=True, epsilon=1e-3)
+            itemvalues = results[0].tolist()
+        keys = listparams.keys() + itemparams.keys()
+        values = listvalues + itemvalues
+        self.optimized_params = dict(zip(keys, values))
+        self.optimized_clf = self.func(**self.optimized_params)
         return self.optimized_clf
 
 
