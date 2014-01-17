@@ -389,6 +389,42 @@ def PCA_stuff_3d(X, y, title="Principal Component Analysis"):
     plt.clf()
 
 
+def plot_num_samples(X, y, clf, steps=25):
+    trainvals = []
+    testvals = []
+    xvals = [i*1.0/steps for i in xrange(1, steps)]
+    for val in xvals:
+        train, test = test_clf(X, y, clf, test_size=val, num=20):
+        trainvals.append(train[0])
+        testvals.append(test[0])
+    plt.plot(xvals, trainvals, '--', label="Training")
+    plt.plot(xvals, testvals, label="Test")
+    plt.legend(loc="best")
+    plt.xlabel("Percent in Training Set")
+    plt.ylabel("MAE (eV)")
+    plt.show()
+
+
+def plot_scan(X, y, function, params):
+    listform = params.items()
+    train, test = scan(X, y, function, params)
+    xvals = listform[0][1]
+    plt.plot(xvals, train, '--', label="Training")
+    plt.plot(xvals, test, label="Test")
+    plt.legend(loc="best")
+    plt.xlabel(listform[0][0])
+    plt.ylabel("MAE (eV)")
+    plt.show()
+
+
+def plot_scan_2d(X, y, function, params):
+    listform = params.items()
+    train, test = scan(X, y, function, params)
+    plt.matshow(test)
+    plt.xlabel(listform[0][0])
+    plt.ylabel(listform[1][0])
+    plt.show()
+
 
 # clf = NeuralNet([("sig", 250), ("sig", 250)])
 # print test_clf(FEATURES[0], GAP, clf, num=1)
