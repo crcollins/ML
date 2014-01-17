@@ -202,7 +202,7 @@ def scan(X, y, function, params):
         a = dict(zip(keys, group))
         clf = function(**a)
         train, test = test_clf_kfold(X, y, clf)
-        print a, idx, train, test
+        # print a, idx, train, test
         train_results[idx] = train[0]
         test_results[idx] = test[0]
     return train_results, test_results
