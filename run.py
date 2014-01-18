@@ -163,6 +163,7 @@ def laplace_kernel_gen(sigma):
         return numpy.exp(sigma*-cdist(X,Y))
     return func
 
+
 def power_kernel_gen(sigma, p):
     def func(X, Y):
         return numpy.exp(sigma*-cdist(X,Y)**p)
@@ -428,6 +429,9 @@ def plot_homo_lumo(homo, lumo, gap, clf):
     plt.plot([0,lim],[-offset,lim-offset], 'g--')
     plt.show()
 
+###############################################################################
+# Neural Net
+###############################################################################
 
 # clf = NeuralNet([("sig", 250), ("sig", 250)])
 # print test_clf(FEATURES[0], GAP, clf, num=1)
