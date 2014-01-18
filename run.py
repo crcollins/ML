@@ -229,10 +229,7 @@ class OptimizedCLF(object):
             _, test = scan(self.X, self.y, self.func, listparams)
             listvalues = []
             for i, pick in enumerate(listparams.values()):
-                try:
-                    temp = (test==test.min()).sum(i).tolist().index(1)
-                except AttributeError:
-                    temp = (test==test.min()).tolist().index(1)
+                temp = numpy.unravel_index(test.argmin(), test.shape)
                 listvalues.append(pick[temp])
             listvalues = listvalues[::-1]
         if itemparams:
