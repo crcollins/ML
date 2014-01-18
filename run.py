@@ -174,13 +174,6 @@ def power_kernel_gen(sigma, p):
 ##########################################
 
 
-def get_learning_curves(X, y, step=25):
-    M, N = X.shape
-    for lim in xrange(50, M, step):
-        W, e1, e2 = get_weight(X, y, limit=lim)
-        print lim, e1, e2
-
-
 def get_high_errors(errors, limit=1.5):
     aerrors = numpy.abs(errors)
     mean = aerrors.mean()
