@@ -328,7 +328,7 @@ def display_sorted_results(results):
     for xset in results:
         order = sort_xset(xset)
         for name in order:
-            print '"' + name + '"'
+            print '"' + name + '"',
             lines = []
             for yset in xset:
                 for i, (train, test) in enumerate(zip(*yset[name])):
