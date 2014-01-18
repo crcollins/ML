@@ -394,7 +394,7 @@ def plot_num_samples(X, y, clf, steps=25):
     testvals = []
     xvals = [i*1.0/steps for i in xrange(1, steps)]
     for val in xvals:
-        train, test = test_clf(X, y, clf, test_size=val, num=20):
+        train, test = test_clf(X, y, clf, test_size=val, num=20)
         trainvals.append(train[0])
         testvals.append(test[0])
     plt.plot(xvals, trainvals, '--', label="Training")
