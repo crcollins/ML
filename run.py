@@ -425,6 +425,19 @@ def plot_scan_2d(X, y, function, params):
     plt.ylabel(listform[1][0])
     plt.show()
 
+def plot_homo_lumo(homo, lumo, gap, clf):
+    HL = numpy.concatenate((lumo-homo, numpy.ones(homo.shape)),1)
+    clf.fit(HL, gap.T.tolist()[0])
+    pred = clf.predict(HL)
+    lim = max(gap.max(), clf.predict(HL).max())
+    std = (pred-gap).std()
+    offset = ((std**2)/2)**0.5
+    plt.plot(pred,gap,'b.')
+    plt.plot([0,lim],[0,lim], 'r')
+    plt.plot([0,lim],[offset,lim+offset], 'g--')
+    plt.plot([0,lim],[-offset,lim-offset], 'g--')
+    plt.show()
+
 
 # clf = NeuralNet([("sig", 250), ("sig", 250)])
 # print test_clf(FEATURES[0], GAP, clf, num=1)
