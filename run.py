@@ -427,6 +427,9 @@ def plot_homo_lumo(homo, lumo, gap, clf):
     plt.plot([0,lim],[0,lim], 'r')
     plt.plot([0,lim],[offset,lim+offset], 'g--')
     plt.plot([0,lim],[-offset,lim-offset], 'g--')
+    plt.xlabel("LUMO-HOMO (eV)")
+    plt.ylabel("GAP (eV)")
+    plt.title("Simple Prediction of Gap Value verses Gap Value")
     plt.show()
 
 ###############################################################################
