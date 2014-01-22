@@ -88,6 +88,24 @@ class Linear(object):
         X = numpy.matrix(X)
         return X*self.weights
 
+class KernelRegression(object):
+    def __init__(self, kernel=None, gamma=0.05, C=10):
+        self.weights = None
+        self.kernel = gauss_kernel_gen(gamma)
+        self.X = None
+        self.C = C
+        self.gamma = gamma
+    def fit(self, X, y):
+        X = numpy.matrix(X)
+        y = numpy.matrix(y).T
+        self.X = X
+        print self.kernel(X, X).shape, (self.C*numpy.eye(X.shape[0])).shape
+        self.weights = numpy.linalg.pinv(self.kernel(X, X)+self.C*numpy.eye(X.shape[0]))*y
+    def predict(self, X):
+        X = numpy.matrix(X)
+        return self.kernel(X, self.X)*self.weights
+
+
 class NeuralNet(object):
     def __init__(self, hidden_layers=None):
         self.hidden_layers = list(hidden_layers)
