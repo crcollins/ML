@@ -232,7 +232,7 @@ class OptimizedCLF(object):
     def __call__(self, *args):
         a = dict(zip(self.params.keys(), *args))
         clf = self.func(**a)
-        train, test = test_clf_kfold(self.X, self.y, clf)
+        train, test = test_clf_kfold(self.X, self.y, clf, folds=5)
         return test[0]
 
     def get_optimized_clf(self):
