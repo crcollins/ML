@@ -247,9 +247,9 @@ class OptimizedCLF(object):
         if listparams:
             _, test = scan(self.X, self.y, self.func, listparams)
             listvalues = []
+            temp = numpy.unravel_index(test.argmin(), test.shape)
             for i, pick in enumerate(listparams.values()):
-                temp = numpy.unravel_index(test.argmin(), test.shape)
-                listvalues.append(pick[temp])
+                listvalues.append(pick[temp[i]])
             listvalues = listvalues[::-1]
         if itemparams:
             bounds = ((1e-8, None), ) * len(self.params.keys())
