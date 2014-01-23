@@ -418,11 +418,12 @@ def plot_scan(X, y, function, params):
     listform = params.items()
     train, test = scan(X, y, function, params)
     xvals = listform[0][1]
-    plt.plot(xvals, train, '--', label="Training")
-    plt.plot(xvals, test, label="Test")
+    plt.plot(numpy.log(xvals), train, '--', label="Training")
+    plt.plot(numpy.log(xvals), test, label="Test")
     plt.legend(loc="best")
-    plt.xlabel(listform[0][0])
+    plt.xlabel("log(%s)" % listform[0][0])
     plt.ylabel("MAE (eV)")
+    plt.title("Optimization of %s" % listform[0][0])
     plt.show()
 
 
@@ -482,7 +483,6 @@ def plot_homo_lumo(homo, lumo, gap, clf):
 #     clf = NeuralNet(new)
 #     print i, layers,
 #     print test_clf(FEATURES[0], GAP, clf, num=1)
-
 
 
 
