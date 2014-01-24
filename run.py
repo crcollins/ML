@@ -503,15 +503,21 @@ def multi_func(xset):
     return temp
 
 
+def multi_func2(params):
+    yset, xset = params
+    return test_sklearn(xset, yset)
+
+
 def main():
     pool = multiprocessing.Pool(processes=4)
     results = pool.map(multi_func, FEATURES)
+    results2 = pool.map(multi_func2, FEATURES1)
     clfs = display_sorted_results(results)
-    return results, clfs
+    clfs2 = display_sorted_results(results2)
+    return results, results2, clfs, clfs2
 
-
+FEATURES1 = []
 for i, feat in enumerate(FEATURES[1:]):
-    print i
     homoclf = OptimizedCLF(feat, HOMO, svm.SVR, {"C": 10, "gamma": 0.05}).get_optimized_clf()
     homoclf.fit(feat, HOMO.T.tolist()[0])
     HOMOp = numpy.matrix(homoclf.predict(feat)).T
@@ -520,7 +526,13 @@ for i, feat in enumerate(FEATURES[1:]):
     lumoclf.fit(feat, LUMO.T.tolist()[0])
     LUMOp = numpy.matrix(lumoclf.predict(feat)).T
 
-    FEATURES.append(numpy.concatenate([feat, HOMOp, LUMOp], 1))
+    gapclf = OptimizedCLF(feat, GAP, svm.SVR, {"C": 10, "gamma": 0.05}).get_optimized_clf()
+    gapclf.fit(feat, GAP.T.tolist()[0])
+    GAPp = numpy.matrix(gapclf.predict(feat)).T
+
+    FEATURES1.append((GAP, numpy.concatenate([feat, HOMOp, LUMOp], 1)))
+    FEATURES1.append((HOMO, numpy.concatenate([feat, LUMOp, GAPp], 1)))
+    FEATURES1.append((LUMO, numpy.concatenate([feat, GAPp, HOMOp], 1)))
 
 
 if __name__ == "__main__":
