@@ -316,7 +316,9 @@ def test_sklearn(X, y):
             a,b = test_clf_kfold(X, y, clf, folds=10)
             train.append(a)
             test.append(b)
-        results[name] = (train, test)
+        if name == "svm laplace":
+            clf.kernel = "laplace"
+        results[name] = (train, test, clf)
     return results
 
 
@@ -329,7 +331,7 @@ def sort_xset(xset):
     temp = {}
     for yset in xset:
         for name in yset:
-            zipped = zip(*yset[name])
+            zipped = zip(*yset[name][:-1])
             (_, test) = zipped[0]
             if temp.get(name):
                 temp[name].append(test[0])
@@ -341,13 +343,15 @@ def sort_xset(xset):
 
 
 def display_sorted_results(results):
+    clfs = []
     for xset in results:
         order = sort_xset(xset)
         for name in order:
             print '"' + name + '"',
             lines = []
             for yset in xset:
-                for i, (train, test) in enumerate(zip(*yset[name])):
+                clfs.append(yset[name][-1])
+                for i, (train, test) in enumerate(zip(*yset[name][:-1])):
                     try:
                         lines[i].extend([train, test])
                     except IndexError:
@@ -361,6 +365,7 @@ def display_sorted_results(results):
                 spacers = ['', '', '', '']
                 print ','.join(str(x) for x in sum(zip(spacers, means, stds), ()))
         print '\n'
+    return clfs
 
 
 def PCA_stuff(X, y, title="Principal Component Analysis"):
@@ -501,8 +506,8 @@ def multi_func(xset):
 def main():
     pool = multiprocessing.Pool(processes=4)
     results = pool.map(multi_func, FEATURES)
-    display_sorted_results(results)
-    return results
+    clfs = display_sorted_results(results)
+    return results, clfs
 
 
 for i, feat in enumerate(FEATURES[1:]):
