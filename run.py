@@ -505,7 +505,7 @@ def multi_func(xset):
 
 def multi_func2(params):
     yset, xset = params
-    return test_sklearn(xset, yset)
+    return [test_sklearn(xset, yset)]
 
 
 def main():
@@ -536,4 +536,5 @@ for i, feat in enumerate(FEATURES[1:]):
 
 
 if __name__ == "__main__":
-    results = main()
+    results, results2, clfs, clfs2 = main()
+
