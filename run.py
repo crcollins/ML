@@ -435,10 +435,18 @@ def plot_scan(X, y, function, params):
 def plot_scan_2d(X, y, function, params):
     listform = params.items()
     train, test = scan(X, y, function, params)
-    plt.matshow(test)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    cax = ax.matshow(test, interpolation='nearest')
+    fig.colorbar(cax)
+    ax.xaxis.set_ticks(numpy.arange(0,len(listform[0][1])))
+    ax.set_xticklabels(listform[0][1])
+    ax.yaxis.set_ticks(numpy.arange(0,len(listform[1][1])))
+    ax.set_yticklabels(listform[1][1])
     plt.xlabel(listform[0][0])
     plt.ylabel(listform[1][0])
     plt.show()
+    return train, test
 
 def plot_homo_lumo(homo, lumo, gap, clf):
     HL = numpy.concatenate((lumo-homo, numpy.ones(homo.shape)),1)
