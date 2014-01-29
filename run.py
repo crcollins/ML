@@ -448,6 +448,7 @@ def plot_scan_2d(X, y, function, params):
     plt.show()
     return train, test
 
+
 def plot_homo_lumo(homo, lumo, gap, clf):
     HL = numpy.concatenate((lumo-homo, numpy.ones(homo.shape)),1)
     clf.fit(HL, gap.T.tolist()[0])
@@ -462,6 +463,15 @@ def plot_homo_lumo(homo, lumo, gap, clf):
     plt.xlabel("LUMO-HOMO (eV)")
     plt.ylabel("GAP (eV)")
     plt.title("Simple Prediction of Gap Value verses Gap Value")
+    plt.show()
+
+
+def plot_homo_lumo_gap(homo, lumo, gap):
+    COLOR = (gap-gap.min())/gap.max()
+    cm = plt.get_cmap("HOT")
+    plt.scatter(homo, lumo, c=COLOR, s=20, marker='o', edgecolors='none')
+    plt.xlabel("HOMO (eV)")
+    plt.ylabel("LUMO (eV)")
     plt.show()
 
 ###############################################################################
