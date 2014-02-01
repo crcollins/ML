@@ -15,7 +15,7 @@ from sklearn import tree
 from sklearn import dummy
 from sklearn import neighbors
 from sklearn import cross_validation
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_error, r2_score
 
 from pybrain.tools.shortcuts import buildNetwork
 from pybrain.datasets import SupervisedDataSet
@@ -475,13 +475,15 @@ def plot_homo_lumo_gap(homo, lumo, gap):
     plt.show()
 
 
-def plot_prediction_actual(prediction, actual, label=""):
-    lim = max(prediction.max(), actual.max())
-    plt.plot(prediction, actual,'b.')
-    plt.plot([0,lim],[0,lim], 'r')
-    plt.xlabel("%s Prediction (eV)" % label)
-    plt.ylabel("%s Actual (eV)" % label)
-    plt.title("%s Prediction verses Actual" % label)
+def plot_actual_prediction(actual, prediction, label=""):
+    lim = actual.max()
+    r2 = r2_score(actual, prediction)
+    plt.plot(actual, prediction, 'b.')
+    plt.plot([0,lim],[0,lim], 'r', label="$r^2=%.2f$"%r2)
+    plt.xlabel("%s Actual (eV)" % label)
+    plt.ylabel("%s Prediction (eV)" % label)
+    plt.title("%s Actual verses Prediction" % label)
+    plt.legend(loc="best")
     plt.show()
 
 
