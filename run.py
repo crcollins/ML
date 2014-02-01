@@ -474,6 +474,17 @@ def plot_homo_lumo_gap(homo, lumo, gap):
     plt.ylabel("LUMO (eV)")
     plt.show()
 
+
+def plot_prediction_actual(prediction, actual, label=""):
+    lim = max(prediction.max(), actual.max())
+    plt.plot(prediction, actual,'b.')
+    plt.plot([0,lim],[0,lim], 'r')
+    plt.xlabel("%s Prediction (eV)" % label)
+    plt.ylabel("%s Actual (eV)" % label)
+    plt.title("%s Prediction verses Actual" % label)
+    plt.show()
+
+
 ###############################################################################
 # Neural Net
 ###############################################################################
