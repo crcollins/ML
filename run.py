@@ -2,6 +2,7 @@ import csv
 import itertools
 import multiprocessing
 import ast
+import cPickle
 
 import numpy
 import matplotlib.pyplot as plt
@@ -547,25 +548,39 @@ def main():
     clfs2 = display_sorted_results(results2)
     return results, results2, clfs, clfs2
 
-FEATURES1 = []
-for i, feat in enumerate(FEATURES[1:]):
-    homoclf = OptimizedCLF(feat, HOMO, svm.SVR, {"C": 10, "gamma": 0.05}).get_optimized_clf()
-    homoclf.fit(feat, HOMO.T.tolist()[0])
-    HOMOp = numpy.matrix(homoclf.predict(feat)).T
-
-    lumoclf = OptimizedCLF(feat, LUMO, svm.SVR, {"C": 10, "gamma": 0.05}).get_optimized_clf()
-    lumoclf.fit(feat, LUMO.T.tolist()[0])
-    LUMOp = numpy.matrix(lumoclf.predict(feat)).T
-
-    gapclf = OptimizedCLF(feat, GAP, svm.SVR, {"C": 10, "gamma": 0.05}).get_optimized_clf()
-    gapclf.fit(feat, GAP.T.tolist()[0])
-    GAPp = numpy.matrix(gapclf.predict(feat)).T
-
-    FEATURES1.append((GAP, numpy.concatenate([feat, HOMOp, LUMOp], 1)))
-    FEATURES1.append((HOMO, numpy.concatenate([feat, LUMOp, GAPp], 1)))
-    FEATURES1.append((LUMO, numpy.concatenate([feat, GAPp, HOMOp], 1)))
 
 
-if __name__ == "__main__":
-    results, results2, clfs, clfs2 = main()
+
+def get_test_features(homo, lumo, gap, features):
+    try:
+        with open("features1.pkl", "rb") as f:
+            FEATURES1 = cPickle.load(f)
+        if len(FEATURES1) == 4 * len(features):
+            return FEATURES1
+    except IOError:
+        pass
+
+    FEATURES1 = []
+    for i, feat in enumerate(features):
+        homoclf = OptimizedCLF(feat, homo, svm.SVR, {"C": 10, "gamma": 0.05}).get_optimized_clf()
+        homoclf.fit(feat, HOMO.T.tolist()[0])
+        HOMOp = numpy.matrix(homoclf.predict(feat)).T
+
+        lumoclf = OptimizedCLF(feat, lumo, svm.SVR, {"C": 10, "gamma": 0.05}).get_optimized_clf()
+        lumoclf.fit(feat, LUMO.T.tolist()[0])
+        LUMOp = numpy.matrix(lumoclf.predict(feat)).T
+
+        gapclf = OptimizedCLF(feat, gap, svm.SVR, {"C": 10, "gamma": 0.05}).get_optimized_clf()
+        gapclf.fit(feat, GAP.T.tolist()[0])
+        GAPp = numpy.matrix(gapclf.predict(feat)).T
+
+        FEATURES1.append((GAP, numpy.concatenate([feat, HOMOp, LUMOp], 1)))
+        FEATURES1.append((HOMO, numpy.concatenate([feat, LUMOp, GAPp], 1)))
+        FEATURES1.append((LUMO, numpy.concatenate([feat, GAPp, HOMOp], 1)))
+        FEATURES1.append((GAP, numpy.concatenate([HOMOp, LUMOp, numpy.ones(GAPp.shape)], 1)))
+    with open("features1.pkl", "wb") as f:
+        cPickle.dump(FEATURES1, f, protocol=-1)
+    return FEATURES1
+
+FEATURES1 = get_test_features(HOMO, LUMO, GAP, FEATURES[1:])
 
