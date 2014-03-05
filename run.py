@@ -55,6 +55,7 @@ LUMO = numpy.zeros((M, 1))
 DIPOLE = numpy.zeros((M, 1))
 ENERGY = numpy.zeros((M, 1))
 GAP = numpy.zeros((M, 1))
+TIME = numpy.zeros((M, 1))
 
 features = []
 for i, (name, feat, occ, virt, orb, dip, eng, gap, time) in enumerate(data):
@@ -64,6 +65,7 @@ for i, (name, feat, occ, virt, orb, dip, eng, gap, time) in enumerate(data):
     DIPOLE[i] = dip
     ENERGY[i] = eng
     GAP[i] = gap
+    TIME[i] = time
 
 FEATURES = []
 for group in zip(*tuple(features)):
