@@ -1,3 +1,4 @@
+process
 logs/*
 *.csv
 *.ods
@@ -7,3 +8,7 @@ database
 pkl/*
 images/*
 spreadsheets/*
+paper/*
+!paper/*.tex
+!paper/paper.bib
+!paper/*.png
