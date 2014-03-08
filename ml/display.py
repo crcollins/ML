@@ -169,3 +169,21 @@ def plot_actual_prediction(actual, prediction, label=""):
     plt.title("%s Actual verses Prediction" % label)
     plt.legend(loc="best")
     plt.show()
+
+def plot_scan_2d_surface(X, y, function, params):
+    listform = params.items()
+    train, test = scan(X, y, function, params)
+    surface(test)
+    return train, test
+
+
+def surface(data, colormap="jet"):
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    X = numpy.arange(data.shape[0])
+    Y = numpy.arange(data.shape[1])
+    XX, YY = numpy.meshgrid(X, Y)
+    surf = ax.plot_surface(XX, YY, data, rstride=1, cstride=1, cmap=colormap, linewidth=0, antialiased=False, shade=True)
+    ax.set_zlim(data.min(), data.max())
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+    plt.show()
