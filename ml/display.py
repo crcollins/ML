@@ -66,6 +66,7 @@ def PCA_stuff(X, y, title="Principal Component Analysis"):
     plt.ylabel("PCA 2")
     plt.show()
     plt.clf()
+    return Xs, Ys, COLOR
 
 
 def PCA_stuff_3d(X, y, title="Principal Component Analysis"):
