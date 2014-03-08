@@ -4,8 +4,11 @@ import cPickle
 import time
 
 import numpy
+from sklearn import svm
+from sklearn import linear_model
 
 import ml.ml
+from ml.display import plot_scan_2d, plot_scan, PCA_stuff, plot_num_samples
 
 
 data = []
