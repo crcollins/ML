@@ -7,7 +7,7 @@ from sklearn import neighbors
 from sklearn import cross_validation
 from sklearn.metrics import r2_score
 
-from utils import scan
+from utils import scan, test_clf
 
 
 def sort_xset(xset):
