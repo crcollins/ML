@@ -1,6 +1,7 @@
 import csv
 import ast
 import cPickle
+import time
 
 import numpy
 
@@ -34,14 +35,14 @@ GAP = numpy.zeros((M, 1))
 TIME = numpy.zeros((M, 1))
 
 features = []
-for i, (name, feat, occ, virt, orb, dip, eng, gap, time) in enumerate(data):
+for i, (name, feat, occ, virt, orb, dip, eng, gap, t) in enumerate(data):
     features.append(feat)
     HOMO[i] = occ
     LUMO[i] = virt
     DIPOLE[i] = dip
     ENERGY[i] = eng
     GAP[i] = gap
-    TIME[i] = time
+    TIME[i] = t
 
 FEATURES = []
 for group in zip(*tuple(features)):
@@ -50,6 +51,7 @@ FEATURES1 = ml.ml.get_extended_features(HOMO, LUMO, GAP, FEATURES[1:])
 
 
 results, results2, clfs, clfs2 = ml.ml.main((HOMO, ), FEATURES, FEATURES1)
+start = time.time()
 
 if __name__ == "__main__":
     print time.time() - start
