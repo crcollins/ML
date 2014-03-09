@@ -1,4 +1,5 @@
 import numpy
+from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 
 from sklearn import decomposition
@@ -67,6 +68,21 @@ def PCA_stuff(X, y, title="Principal Component Analysis"):
     plt.show()
     plt.clf()
     return Xs, Ys, COLOR
+
+
+def plot_PCA_backgroun(Xs, Ys, Zs, method='nearest'):
+    from scipy.interpolate import griddata
+    xgrid = numpy.linspace(Xs.min(), Xs.max(), 1000)
+    ygrid = numpy.linspace(Ys.min(), Ys.max(), 1000)
+    XX, YY = numpy.meshgrid(xgrid, ygrid)
+    points = numpy.concatenate([numpy.matrix(Xs).T, numpy.matrix(Ys).T], 1)
+    grid_z2 = griddata(points, Zs, (XX, YY), method=method)
+    plt.imshow(grid_z2.T, extent=(0,1,0,1), origin='lower')
+    # cm = plt.get_cmap("HOT")
+    # X = (Xs-Xs.min())/(Xs.max()-Xs.min())
+    # Y = (Ys-Ys.min())/(Ys.max()-Ys.min())
+    # plt.scatter(X, Y, c=Zs,s=80, marker='o', edgecolors='none')
+    plt.show()
 
 
 def PCA_stuff_3d(X, y, title="Principal Component Analysis"):
@@ -169,6 +185,7 @@ def plot_actual_prediction(actual, prediction, label=""):
     plt.title("%s Actual verses Prediction" % label)
     plt.legend(loc="best")
     plt.show()
+
 
 def plot_scan_2d_surface(X, y, function, params):
     listform = params.items()
