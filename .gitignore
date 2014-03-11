@@ -1,6 +1,7 @@
 process
 logs/*
 *.csv
+!
 *.ods
 *.pyc
 project/secret_key.py
@@ -12,3 +13,4 @@ paper/*
 !paper/*.tex
 !paper/paper.bib
 !paper/*.png
+!cleaned_data.csv
