@@ -7,8 +7,8 @@ from sklearn import svm
 from sklearn import linear_model
 
 import ml.ml
-from ml.display import plot_scan_2d, plot_scan, PCA_stuff, plot_num_samples
-
+from ml.display import plot_scan_2d, plot_scan, plot_num_samples
+from ml.display import PCA_stuff, plot_PCA_background
 
 data = []
 with open("cleaned_data.csv", "r") as csvfile:
@@ -56,7 +56,14 @@ FEATURES1 = ml.ml.get_extended_features(HOMO, LUMO, GAP, FEATURES[1:])
 results, results2, clfs, clfs2 = ml.ml.main(YSETS, FEATURES, FEATURES1)
 
 if __name__ == "__main__":
-    plot_scan_2d(FEATURES[1], GAP, svm.SVR, {"C": [0.05, 0.1, 0.5, 1, 5, 10, 50, 100, 500, 1000], "gamma": [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5]})
-    plot_scan(FEATURES[1], GAP, linear_model.Ridge, {"alpha": [0.005, 0.01, 0.05, 0.1, 0.5, 1, 5]})
-    PCA_stuff(FEATURES[1], GAP)
+    # Make some example plots
+    2d_scan_params = {
+        "C": [0.05, 0.1, 0.5, 1, 5, 10, 50, 100, 500, 1000],
+        "gamma": [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5]
+    }
+    plot_scan_2d(FEATURES[1], GAP, svm.SVR, 2d_scan_params)
+    scan_params = {"alpha": [0.005, 0.01, 0.05, 0.1, 0.5, 1, 5]}
+    plot_scan(FEATURES[1], GAP, linear_model.Ridge, scan_params)
+    Xs, Ys, Zs = PCA_stuff(FEATURES[1], GAP)
+    plot_PCA_background(Xs, Ys, Zs)
     plot_num_samples(FEATURES[1], GAP, svm.SVR(C=10, gamma=0.05))
