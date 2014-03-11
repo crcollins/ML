@@ -12,7 +12,7 @@ from ml.display import plot_scan_2d, plot_scan, PCA_stuff, plot_num_samples
 
 
 data = []
-with open("data_clean.csv", "r") as csvfile:
+with open("cleaned_data.csv", "r") as csvfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='"')
     for row in reader:
         temp = [row[3]]

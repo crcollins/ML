@@ -1,7 +1,7 @@
 #!/bin/sh
 
 fileparser=~/projects/chemtools-webapp/chemtools/fileparser.py
-data=/home/chris/research/ML/logs
+data=logs
 
 echo "Parsing Generated"
 python $fileparser -f $data/sets/ > data.csv

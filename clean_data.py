@@ -1,7 +1,7 @@
 import csv
 
 names = dict()
-with open("data.csv", "r") as csvfile, open("data_clean.csv", "w") as csvcleanfile:
+with open("data.csv", "r") as csvfile, open("cleaned_data.csv", "w") as csvcleanfile:
     reader = csv.reader(csvfile, delimiter=',', quotechar='"')
     writer = csv.writer(csvcleanfile, delimiter=',', quotechar='"')
     for row in reader:
