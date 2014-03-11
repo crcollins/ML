@@ -1,7 +1,6 @@
 import csv
 import ast
 import cPickle
-import time
 
 import numpy
 from sklearn import svm
@@ -38,14 +37,14 @@ GAP = numpy.zeros((M, 1))
 TIME = numpy.zeros((M, 1))
 
 features = []
-for i, (name, feat, occ, virt, orb, dip, eng, gap, t) in enumerate(data):
+for i, (name, feat, occ, virt, orb, dip, eng, gap, time) in enumerate(data):
     features.append(feat)
     HOMO[i] = occ
     LUMO[i] = virt
     DIPOLE[i] = dip
     ENERGY[i] = eng
     GAP[i] = gap
-    TIME[i] = t
+    TIME[i] = time
 YSETS = (HOMO, LUMO, GAP)
 
 FEATURES = []
@@ -55,10 +54,8 @@ FEATURES1 = ml.ml.get_extended_features(HOMO, LUMO, GAP, FEATURES[1:])
 
 
 results, results2, clfs, clfs2 = ml.ml.main(YSETS, FEATURES, FEATURES1)
-start = time.time()
 
 if __name__ == "__main__":
-    print time.time() - start
     plot_scan_2d(FEATURES[1], GAP, svm.SVR, {"C": [0.05, 0.1, 0.5, 1, 5, 10, 50, 100, 500, 1000], "gamma": [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5]})
     plot_scan(FEATURES[1], GAP, linear_model.Ridge, {"alpha": [0.005, 0.01, 0.05, 0.1, 0.5, 1, 5]})
     PCA_stuff(FEATURES[1], GAP)
