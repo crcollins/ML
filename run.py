@@ -46,6 +46,7 @@ for i, (name, feat, occ, virt, orb, dip, eng, gap, t) in enumerate(data):
     ENERGY[i] = eng
     GAP[i] = gap
     TIME[i] = t
+YSETS = (HOMO, LUMO, GAP)
 
 FEATURES = []
 for group in zip(*tuple(features)):
@@ -53,7 +54,7 @@ for group in zip(*tuple(features)):
 FEATURES1 = ml.ml.get_extended_features(HOMO, LUMO, GAP, FEATURES[1:])
 
 
-results, results2, clfs, clfs2 = ml.ml.main((HOMO, ), FEATURES, FEATURES1)
+results, results2, clfs, clfs2 = ml.ml.main(YSETS, FEATURES, FEATURES1)
 start = time.time()
 
 if __name__ == "__main__":
