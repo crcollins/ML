@@ -70,7 +70,7 @@ def PCA_stuff(X, y, title="Principal Component Analysis"):
     return Xs, Ys, COLOR
 
 
-def plot_PCA_backgroun(Xs, Ys, Zs, method='nearest'):
+def plot_PCA_background(Xs, Ys, Zs, method='nearest'):
     from scipy.interpolate import griddata
     xgrid = numpy.linspace(Xs.min(), Xs.max(), 1000)
     ygrid = numpy.linspace(Ys.min(), Ys.max(), 1000)
