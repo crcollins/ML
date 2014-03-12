@@ -1,4 +1,5 @@
 import numpy
+from scipy.interpolate import griddata
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 
@@ -71,7 +72,6 @@ def PCA_stuff(X, y, title="Principal Component Analysis"):
 
 
 def plot_PCA_background(Xs, Ys, Zs, method='nearest'):
-    from scipy.interpolate import griddata
     xgrid = numpy.linspace(Xs.min(), Xs.max(), 1000)
     ygrid = numpy.linspace(Ys.min(), Ys.max(), 1000)
     XX, YY = numpy.meshgrid(xgrid, ygrid)
