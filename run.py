@@ -57,11 +57,11 @@ if __name__ == "__main__":
     results, results2, clfs, clfs2 = ml.ml.main(YSETS, FEATURES, FEATURES1)
 
     # Make some example plots
-    2d_scan_params = {
+    scan_2d_params = {
         "C": [0.05, 0.1, 0.5, 1, 5, 10, 50, 100, 500, 1000],
         "gamma": [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5]
     }
-    plot_scan_2d(FEATURES[1], GAP, svm.SVR, 2d_scan_params)
+    plot_scan_2d(FEATURES[1], GAP, svm.SVR, scan_2d_params)
     scan_params = {"alpha": [0.005, 0.01, 0.05, 0.1, 0.5, 1, 5]}
     plot_scan(FEATURES[1], GAP, linear_model.Ridge, scan_params)
     Xs, Ys, Zs = PCA_stuff(FEATURES[1], GAP)
