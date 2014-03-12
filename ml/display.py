@@ -76,7 +76,7 @@ def plot_PCA_background(Xs, Ys, Zs, method='nearest'):
     ygrid = numpy.linspace(Ys.min(), Ys.max(), 1000)
     XX, YY = numpy.meshgrid(xgrid, ygrid)
     points = numpy.concatenate([numpy.matrix(Xs).T, numpy.matrix(Ys).T], 1)
-    grid_z2 = griddata(points, Zs, (XX, YY), method=method)
+    grid_z2 = griddata(points, Zs, (XX, YY), method=method)[:,:,0]
     plt.imshow(grid_z2.T, extent=(0,1,0,1), origin='lower')
     # cm = plt.get_cmap("HOT")
     # X = (Xs-Xs.min())/(Xs.max()-Xs.min())
