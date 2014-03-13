@@ -13,4 +13,5 @@ paper/*
 !paper/*.tex
 !paper/paper.bib
 !paper/*.png
+!paper/*.eps
 !cleaned_data.csv
