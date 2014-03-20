@@ -78,10 +78,6 @@ def plot_PCA_background(Xs, Ys, Zs, method='nearest'):
     points = numpy.concatenate([numpy.matrix(Xs).T, numpy.matrix(Ys).T], 1)
     grid_z2 = griddata(points, Zs, (XX, YY), method=method)[:,:,0]
     plt.imshow(grid_z2.T, extent=(0,1,0,1), origin='lower')
-    # cm = plt.get_cmap("HOT")
-    # X = (Xs-Xs.min())/(Xs.max()-Xs.min())
-    # Y = (Ys-Ys.min())/(Ys.max()-Ys.min())
-    # plt.scatter(X, Y, c=Zs,s=80, marker='o', edgecolors='none')
     plt.show()
 
 
