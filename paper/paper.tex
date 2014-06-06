@@ -1,4 +1,5 @@
-\documentclass[titlepage]{article}
+% \documentclass[10pt,twocolumn]{article}
+\documentclass[10pt]{article}
 \usepackage{graphicx}       % include figures
 \usepackage{float}          % align figures
 \usepackage{amsmath}        % \pm
@@ -10,29 +11,38 @@
 \restylefloat{table}        % same page tables
 \usepackage{chngpage}
 \usepackage{multirow}
+% \graphicspath{ {./figures/} }
 
 \begin{document}
 
 
-
-
-\title{Application of Machine Learning Methods to the Optoelectronic properties of Benzobisazoles}
+\title{Application of Machine Learning to Predict the Optoelectronic Properties of Benzobisazoles}
 \author{Christopher Collins}
 
 \maketitle
 
-\doublespace
+\begin{abstract}
+By using machine learning methods, the HOMO, LUMO, and band gap can be predicted to within 0.09 eV, 0.08 eV, and 0.10 eV respectively. These results also come with the added benefit of being 30,000,000 times faster than the equivilant Density Functional Theory calculation.
+\end{abstract}
+
+% \doublespace
 \section{Introduction}
 
-Organic solar cell stuff, cruiform stuff, machine learning stuff
+There are many possible molecules that could be used as organic solar cells, the problem is current organic solar cells have poor effeciency [CITE]. Computational
+
+Because of these problems, there is a need to rapidly predict the properties of molecules so that. Machine learning has been shown to be a fast way to predict properties of many systems and specifically, has been shown to be a viable way to predict properties of molecules\cite{hansen_assessment_2013} \cite{montavon_machine_2013}.
+
+For this study, we will be looking at using different machine learning methods in conjunction with Density Functional Theory calculations to be able to predict the
+
 
 \section{Naming Scheme}
 
+To be able to represent these molecular structures to the machine learning algorthims, a common naming scheme was formed such that it could be reaily converted into a vector form. This naming scheme exploits the planar nature of benzobisazoles as well as their cruxiformic structure.
 The naming scheme is broken down into three separate components. These parts are the core, the sides, and the options.
 
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=1.25in]{TXY.eps}
+    \includegraphics[width=1.25in]{figures/TXY.png}
   \end{center}
   \caption{TXY Core}
   \label{fig:txy}
@@ -40,11 +50,11 @@ The naming scheme is broken down into three separate components. These parts are
 
 
 
-The core is the central part of the molecule. All cores are identified by a combination of three letters. The first letter indicates whether or not the structure is Cis or Trans which correspond to the letters C and T respectively. The second letter in the core name is the symbol for the element that is in the core without the $\pi$ bond (meh?) (for consistency in naming this will always be the top right atom). This can be one of O, S, N, P, or C. The final letter is the remaining element's symbol which can be N, P, or C (for consistency this will always be the bottom right atom).
+The core is the central part of the molecule. All cores are identified by a combination of three letters. The first letter indicates whether or not the structure is Cis or Trans which correspond to the letters C and T respectively. The second letter in the core name is the symbol for the element that is in the core without the $\pi$ bond (meh?) (for consistency in naming this will always be the top right atom). This can be one of Oxygen (O), Sulfur (S), Nitrogen (N), Phosporous (P), or Carbon (C). The final letter is the remaining element's symbol which can be N, P, or C (for consistency this will always be the bottom right atom).
 
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[width=1.25in]{CXY.eps}
+    \includegraphics[width=1.25in]{figures/CXY.png}
   \end{center}
   \caption{CXY Core}
   \label{fig:cxy}
@@ -52,20 +62,27 @@ The core is the central part of the molecule. All cores are identified by a comb
 
 The sides of the name are split into three groups based on the location in the structure. Going from the core orientation, these three groups are the left, center, and right sides. The left and right sides of the structure form the horizontal axis. The center group is the vertical axis and ... something about how they are the same....
 
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=1.75in]{figures/aryl.png}
+  \end{center}
+  \caption{Aryl Groups}
+\end{figure}
+
 \begin{table}[H]
   \centering
   \caption{Aryl Groups}
-  \begin{tabular}{ccc}
-    Label   & Name          & Structure \\
+  \begin{tabular}{lc}
+    Label   & Name                    \\
     \hline
-    2       & Double Bond   &           \\
-    3       & Triple Bond   &           \\
-    4       & Phenyl        &           \\
-    5       & Thiophene     &           \\
-    6       & Pyridine      &           \\
-    7       & Carbazole     &           \\
-    8       & TZ            &           \\
-    9       & EDOT          &           \\
+    2       & Double Bond             \\
+    3       & Triple Bond             \\
+    4       & Phenyl                  \\
+    5       & Thiophene               \\
+    6       & Pyridine                \\
+    7       & Carbazole               \\
+    8       & Tetrazine               \\
+    9       & Ethylenedioxythiophene  \\
     \hline
   \end{tabular}
   \label{tab:aryl}
@@ -76,22 +93,22 @@ Each side is then broken down into components of Aryl, X, and R groups. Aryl gro
 \begin{table}[H]
   \centering
   \caption{X/R-Groups}
-  \begin{tabular}{ccc}
-    Label   & Name          & Structure \\
+  \begin{tabular}{lc}
+    Label   & Name      \\
     \hline
-    A/a     & Hydrogen  &           \\
-    B/b     & Chlorine  &           \\
-    C/c     & Bromine   &           \\
-    D/d     & CN        &           \\
-    E/e     & CCH       &           \\
-    F/f     & OH        &           \\
-    G/g     & SH        &           \\
-    H/h     & $NH_2$    &           \\
-    I/i     & $CH_3$    &           \\
-    J/j     & Phenyl    &           \\
-    K/k     & TMS       &           \\
-    L/l     & $OCH_3$   &           \\
-    *       & Spacer    &           \\
+    A/a     & Hydrogen  \\
+    B/b     & Chlorine  \\
+    C/c     & Bromine   \\
+    D/d     & CN        \\
+    E/e     & CCH       \\
+    F/f     & OH        \\
+    G/g     & SH        \\
+    H/h     & $NH_2$    \\
+    I/i     & $CH_3$    \\
+    J/j     & Phenyl    \\
+    K/k     & TMS       \\
+    L/l     & $OCH_3$   \\
+    *       & Spacer    \\
     \hline
   \end{tabular}
   \label{tab:xrgroups}
@@ -113,6 +130,8 @@ Structures were picked using this naming scheme to try to cover as many combinat
 
 
 \section{Feature Vectors}
+
+To be able to represent these structures to the computer, and consequently to the machine learning algorthms they must be vectorized.
 
 Using this naming scheme, it is apparent that there are multiple ways that these could be converted into feature vectors for use in machine learning.
 
@@ -154,52 +173,34 @@ $$ GAPit = [Decay, predictedHOMO, predictedLUMO] $$
 $$ HOMOit = [Decay, predictedLUMO, predictedGAP] $$
 $$ LUMOit = [Decay, predictedGAP, predictedHOMO] $$
 
-\section{Methods}
-\subsection{Mean Value}
-\subsection{Linear Regression}
-\subsubsection{Regular}
-\subsubsection{Ridged}
-\subsection{Tree}
-\subsection{k-Nearest Neighbors}
-\subsection{Support Vector Machines}
+\section{Machine Learning Methods}
 
-% \begin{figure}[H]
-%   \begin{center}
-%     \includegraphics[width=5in]{scan2.png}
-%   \end{center}
-%   \caption{Scan of SVM parameters C and gamma}
-%   \label{fig:homolumo}
-% \end{figure}
+In previous work \cite{montavon_machine_2013}, it has been shown that different machine learning algorthms have had drastically different performance when used to predict molecular properties. Because of this, seven algorthms were picked to compare. These were mean value, linear regression, linear ridged regression, tree regression, k-nearest neighbors, and support vector machines. The mean value method is used as a baseline for all of the other methods. ()
 
-\subsubsection{Gaussian Kernel}
-$$ k(x, x') = exp\left( −\frac{1}{2\sigma^2} \lVert x - x'  \rVert^2 \right) $$
-
-\subsubsection{Laplacian Kernel}
-$$ k(x, x') = exp\left( −\frac{1}{\sigma} \lvert x - x' \rvert \right) $$
-
+ \begin{figure}[H]
+   \begin{center}
+     \includegraphics[width=5in]{figures/surf.png}
+   \end{center}
+   \caption{Scan of SVM parameters C and $\gamma$}
+   \label{fig:scan}
+ \end{figure}
 
 \section{Procedure}
 
-Roughly 1100 benzobisazole structures were built (using a script?). Once they were built the structures were optimized using Density Functional Theory (DFT) with B3LYP/6-31(g). After the optimization, the molecules were then ran with Time Dependent Density Functional Theory (TDDFT) with B3LYP/6-31(g).
+Roughly 1100 benzobisazole structures were built. Once they were built the structures were optimized using Density Functional Theory (DFT) with B3LYP/6-31g*. After the optimization, the molecules were then ran with Time Dependent Density Functional Theory (TDDFT) with B3LYP/6-31g*.
 
 Beyond the 1100 benzobisazole structures, about 1000 other structures were collected for comparison (?).
 
 Once all the calculations were completed, the resulting log files were parsed for HOMO, LUMO, and Band Gap values. From there, the first three feature vectors were constructed (Naive, Decay, Decay with Distance Correction) and the resulting vectors were stored with the parsed log data.
 
-(When to mention Decay with Prediction creation?)
-
-Once all the data and feature vectors were collected, the machine learning stuff...
-
-For each feature vector, property, method set the methods relevant parameters were optimized (C, gamma, max depth, alpha, n neighbors). Then using these optimized parameters, the machine learning models were trained using k-folds specifically using 10 folds (bla bla).
-
-(maybe invert the procedure)
+Once all the data and feature vectors were collected, they were feed into the machine learning algorthms. For each feature vector, property, method set the methods relevant parameters were optimized (C, $\gamma$, max depth, $\alpha$, n neighbors). Then using these optimized parameters, the machine learning models were trained using k-folds for cross validation, specifically using 10 folds. All of the results were then tabled and compared based on their mean absolute errors (MAE).
 
 \section{Results}
 
 \begin{table}[H]
   \centering
   \caption{Band Gap Results}
-  \begin{tabular}{lll}
+  \begin{tabular}{llr}
             Feature Vector     & Method       & MAE (eV)                \\
     \hline\hline
     \multirow{7}{*}{Naive}     & Mean Value   & 0.5051 $\pm$ 0.044 \\
@@ -238,6 +239,13 @@ For each feature vector, property, method set the methods relevant parameters we
   \label{tab:gapresults}
 \end{table}
 
+ \begin{figure}[H]
+   \begin{center}
+     \includegraphics[width=5in]{figures/gapbars.pdf}
+   \end{center}
+   \caption{Band Gap Results}
+   \label{fig:scan}
+ \end{figure}
 
 
 % dummy           0.5051634571 $\pm$ 0.0445987177
@@ -276,7 +284,7 @@ For each feature vector, property, method set the methods relevant parameters we
 \begin{table}[H]
   \centering
   \caption{HOMO Results}
-  \begin{tabular}{lll}
+  \begin{tabular}{llr}
             Feature Vector     & Method       & MAE (eV)                \\
     \hline\hline
     \multirow{7}{*}{Naive} & Mean Value   & 0.4330 $\pm$ 0.038 \\
@@ -312,8 +320,16 @@ For each feature vector, property, method set the methods relevant parameters we
                                & SVM Laplace  & 0.1001 $\pm$ 0.008 \\
     \hline\hline
   \end{tabular}
-  \label{tab:gapresults}
+  \label{tab:homoresults}
 \end{table}
+
+ \begin{figure}[H]
+   \begin{center}
+     \includegraphics[width=5in]{figures/homobars.pdf}
+   \end{center}
+   \caption{HOMO Results}
+   \label{fig:scan}
+ \end{figure}
 
 % dummy            0.4330672042 $\pm$ 0.0380947474
 % linear           0.2002858544 $\pm$ 0.0244903400
@@ -350,7 +366,7 @@ For each feature vector, property, method set the methods relevant parameters we
 \begin{table}[H]
   \centering
   \caption{LUMO Results}
-  \begin{tabular}{lll}
+  \begin{tabular}{llr}
             Feature Vector     & Method       & MAE (eV)                \\
     \hline\hline
     \multirow{7}{*}{Naive}     & Mean Value   & 0.4475 $\pm$ 0.037 \\
@@ -389,6 +405,14 @@ For each feature vector, property, method set the methods relevant parameters we
   \label{tab:gapresults}
 \end{table}
 
+ \begin{figure}[H]
+   \begin{center}
+     \includegraphics[width=5in]{figures/lumobars.pdf}
+   \end{center}
+   \caption{LUMO Results}
+   \label{fig:scan}
+ \end{figure}
+
 % dummy           0.4475990362 $\pm$ 0.0379190939
 % linear          0.1900266591 $\pm$ 0.0285711677
 % linear ridge    0.1862466873 $\pm$ 0.0252330179
@@ -423,23 +447,31 @@ For each feature vector, property, method set the methods relevant parameters we
 
 \section{Conclusions}
 
-BLOB
-Overall, the support vector machines with Gaussian kernel had the best performance across all of the goal features and all of the feature vectors. The optimized paramters for the ... $C \approx 10$ and $\gamma \approx 0.05$.
+Overall, the support vector machines with Gaussian kernel had the best performance across all of the goal features and all of the feature vectors. The optimized paramters for the method were $C \approx 10$ and $\gamma \approx 0.05$.
 
 For the feature vectors, the decay was the best performaing feature vector with the parameters $A = 1, H = 1, p = 1$. (0.71) As well as having a better overall performance, it is also much faster than the naive feature vector because it has fewer components. This increased speed could especially be seen when training the data.
 With the addition of predicted HOMO/LUMO values for the decay feature vector, the performance for estimating the goal features increased by about 25\%.
 
-Unexpectedly, the decay function with distance corrections did not perform any better than the regular decay feature vector. In theory, this should have worked better with hetrogenous side chains...
+Unexpectedly, the decay function with distance corrections did not perform any better than the regular decay feature vector. In theory, this should have worked better with hetrogenous side chains, but its use seemed to only increase the MAE.
 
 There were a few anomalies in the results. The most noticeable is long tail distribution of errors ...
 several molecules with unusually high errors ($8A\_TON\_A\_A$), structures where features overlap ($A\_TON\_4ed\_A$)
 
-None of the feature vectors take into account the kuhn expression for polymer chains. This leads to high errors as n or m > 1. The problem is not as pronounced when using SVM with Gaussian kernels because of how they decay (?).
 
-%        Neural Network
-%            Tested various network configurations and could the best MAE was around 0.20 eV
-%            Network configuration seemed to have minimal impact on results
-%            Problem attributed to inexperience with Neural Networks
+To run the original DFT and TDDFT calculations for these moelcules took about 35,0000 CPU hours. Calculating the same properties using these machine learning methods took about 4 seconds.
+
+% In addition to the machine learning methods used in this study, there was also an attempt to use Neural Networks for the predictions. Unfortunatly, the results were not satisfactory relative to the amount of time required (0.20 eV MAE). Drastic changes to the network made minimal differences to the final error. This is attirbuted to inexperience with proper methodologies with Neural Networks.
+
+\section{Future Work}
+
+Continue making tweaks to reduce error
+Collect more data
+
+None of the feature vectors take into account the kuhn expression for polymer chains. This leads to high errors as n or m > 1. The problem is not as pronounced when using SVM with Gaussian kernels because of how they decay (?). Preliminary work with this addition corrected seems to be the best way to account for polymerization of benzobisazoles.
+Test with additional properties (total energy, dipole, etc.)
+Generalize for any structure
+Make it faster
+% In addition to the machine learning methods used in this study, there was also an attempt to use Neural Networks for the predictions. Unfortunatly, the results were not satisfactory relative to the amount of time required (0.20 eV MAE). Drastic changes to the network made minimal differences to the final error. This is attirbuted to inexperience with proper methodologies with Neural Networks.
 
 
 \nocite{ruddigkeit_enumeration_2012}
@@ -465,11 +497,3 @@ None of the feature vectors take into account the kuhn expression for polymer ch
 \appendix
 
 \end{document}
-
-
-
-
-
-
-
-
