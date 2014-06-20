@@ -17,18 +17,22 @@
 
 
 \title{Application of Machine Learning to Predict the Optoelectronic Properties of Benzobisazoles}
-\author{Christopher Collins}
+\author{Christopher Collins \and Aim\'{e}e Tomlinson}
 
 \maketitle
 
 \begin{abstract}
-By using machine learning methods, the HOMO, LUMO, and band gap can be predicted to within 0.09 eV, 0.08 eV, and 0.10 eV respectively. These results also come with the added benefit of being 30,000,000 times faster than the equivalent Density Functional Theory calculation.
+Because there is always more molecules than time, there is a need to quickly be able to rule out structures that are unsuitable for further research. The method presented here takes advantage of common structural features of molecules to decrease the required computational expense that can be seen equivalent Density Functional Theory calculations. By using machine learning methods, the HOMO, LUMO, and band gap can be predicted to within 0.09 eV, 0.08 eV, and 0.10 eV respectively for benzobisazoles. These results also come with the added benefit of being 30,000,000 times faster than the equivalent DFT calculation.
 \end{abstract}
 
-\doublespace
+% \doublespace
 \section{Introduction}
 
-There are many possible molecules that could be used as organic solar cells, the problem is current organic solar cells have poor effeciency [CITE]. Computational
+
+There are many different molecule groups that are being looked at for use as organic solar cells [CITE]. One such group is the benzobisazoles [CITE].
+
+
+There are many possible molecules that could be used as organic solar cells, the problem is current organic solar cells have poor efficiency [CITE]. To attempt to search through all the possible compounds that could be used for organic solar cells computational methods are used to save time.
 
 Because of these problems, there is a need to rapidly predict the properties of molecules so that. Machine learning has been shown to be a fast way to predict properties of many systems and specifically, has been shown to be a viable way to predict properties of molecules\cite{hansen_assessment_2013} \cite{montavon_machine_2013}.
 
@@ -37,7 +41,7 @@ For this study, we will be looking at using different machine learning methods i
 
 \section{Naming Scheme}
 
-To be able to represent these molecular structures to the machine learning algorithms, a common naming scheme was formed such that it could be readily converted into a vector form. This naming scheme exploits the planar nature of benzobisazoles as well as their cruxiformic structure.
+To be able to represent these molecular structures to the machine learning algorithms, a common naming scheme was formed such that it could be readily converted into a vector form. This naming scheme exploits the planar nature of benzobisazoles as well as their cruxiformic structure. Because of this regularity, they can be readily be structured in such a way that
 The naming scheme is broken down into three separate components. These parts are the core, the sides, and the options.
 
 \begin{figure}[H]
@@ -57,28 +61,12 @@ The sides of the name are split into three groups based on the location in the s
     \includegraphics[width=4in]{figures/aryl.pdf}
   \end{center}
   \caption{Aryl Groups}
+  \label{fig:aryl}
 \end{figure}
 
-\begin{table}[H]
-  \centering
-  \caption{Aryl Groups}
-  \begin{tabular}{lc}
-    Label   & Name                    \\
-    \hline
-    2       & Double Bond             \\
-    3       & Triple Bond             \\
-    4       & Phenyl                  \\
-    5       & Thiophene               \\
-    6       & Pyridine                \\
-    7       & Carbazole               \\
-    8       & Tetrazine               \\
-    9       & Ethylenedioxythiophene  \\
-    \hline
-  \end{tabular}
-  \label{tab:aryl}
-\end{table}
+These aryl groups are specifically were chosen because they are all highly conjugated. (NEEDS MORE)
 
-Each side is then broken down into components of Aryl, X groups, and R groups. Aryl groups are indicated by the numbers 2 through 9 as seen in Table \ref{tab:aryl}. Aryl groups form the main chain part of the structure, they are able to extend the length of the chain and some have places for R groups (4, 5, 6, 7).
+Each side is then broken down into components of Aryl, X groups, and R groups. Aryl groups are indicated by the numbers 2 through 9 as seen in Figure \ref{fig:aryl}. Aryl groups form the main chain part of the structure, they are able to extend the length of the chain and some have places for R groups (4, 5, 6, 7).
 
 \begin{table}[H]
   \centering
@@ -104,11 +92,12 @@ Each side is then broken down into components of Aryl, X groups, and R groups. A
   \label{tab:xrgroups}
 \end{table}
 
+The X and R groups were picked based on their electron withdrawing/donating characteristics. These functional groups have also been shown to aide in the tuning of the optoelectronic properties of molecules [CITE].
 
-X and R groups are both composed of the same set of substituents seen in Table \ref{tab:xrgroups}. X groups are the letters A through L, and r groups are a through l. The main difference between X and R groups is where they are placed in the chain, whereas R-Groups are placed on the Aryl group that directly proceeds them. As can be seen in Table \ref{tab:aryl} R-groups come in pairs of two. These groups can either be the same or different(?). Because there are some Aryl groups that do not allow any R-groups there is an additional spacer R-group that is designated as *. It has no effect on the structure of the molecule, it is just used as a place holder when converting the names to a feature vector.
 
-Starting from the core going outward, side chains take two main forms. They are either an X-group (which terminates the entire side) or they are a triplet of an Aryl group and two R-groups. If it is an aryl group triplet, then the process can continue.
-(X-group $\vert$ [Aryl, R-group, R-group])
+X and R groups are both composed of the same set of substituents seen in Table \ref{tab:xrgroups}. X groups are the letters $A$ through $L$, and R groups are $a$ through $l$. The main difference between X and R groups is where they are placed in the chain, whereas R-Groups are placed on the Aryl group that directly proceeds them. As can be seen in Table \ref{tab:aryl} R-groups come in pairs of two. These groups can either be the same or different(?). Because there are some Aryl groups that do not allow any R-groups there is an additional spacer R-group that is designated as *. It has no effect on the structure of the molecule, it is just used as a place holder when converting the names to a feature vector.
+
+Starting from the core going outward, side chains take two main forms. They are either an X-group (which terminates the entire side) or they are a triplet of an Aryl group and two R-groups. If it is an aryl group triplet, then the process can continue. (X-group $\vert$ [Aryl, R-group, R-group])
 
 The final component of the naming scheme is a set of options. These are broken up into two main classes. The first pair of options are the polymer options and they indicate how many times the molecules is repeated along the horizontal (n) axis (chain?) or the vertical (m) axis (chain?). The second set of options is a set of x, y, and z that are the number of times that the molecule is stacked in each direction(?).
 
@@ -239,6 +228,8 @@ None of the feature vectors take into account the Kuhn expression for polymer ch
 Another possible expansion of work would be to test with more properties of the molecules such as total energy, dipole, and etc.
 
 As an end goal, it would be nice to generalize these machine learning methods such that they could be used for any structure.
+
+... The methods presented here would be used as a first line filter to rule out large amounts molecular structures that do not meet the desired requirements such that more time could be allocated only on the structures that show the most promise instead of relying on intuition. As can be seen by these methods speeds and relative accuracy, they fit the bill for this kind of work.
 
 % In addition to the machine learning methods used in this study, there was also an attempt to use Neural Networks for the predictions. Unfortunatly, the results were not satisfactory relative to the amount of time required (0.20 eV MAE). Drastic changes to the network made minimal differences to the final error. This is attirbuted to inexperience with proper methodologies with Neural Networks.
 
