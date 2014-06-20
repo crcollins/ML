@@ -17,7 +17,10 @@
 
 
 \title{Application of Machine Learning to Predict the Optoelectronic Properties of Benzobisazoles}
-\author{Christopher Collins \and Aim\'{e}e Tomlinson}
+\author{Christopher Collins \qquad Aim\'{e}e Tomlinson\\
+        \emph{Department of Chemistry and Biochemistry}\\
+         \emph{University of North Georgia}\\
+         \emph{Dahlonega, GA 30597}}
 
 \maketitle
 
@@ -28,21 +31,20 @@ Because there is always more molecules than time, there is a need to quickly be 
 % \doublespace
 \section{Introduction}
 
+There are many different molecule groups that are being looked at for use as organic solar cells [CITE]. One such group is the benzobisazoles [CITE]. There are many possible molecules that could be used as organic solar cells, the problem is current organic solar cells have poor efficiency [CITE]. To attempt to search through all the possible compounds that could be used for organic solar cells computational methods are used to save time.
 
-There are many different molecule groups that are being looked at for use as organic solar cells [CITE]. One such group is the benzobisazoles [CITE].
-
-
-There are many possible molecules that could be used as organic solar cells, the problem is current organic solar cells have poor efficiency [CITE]. To attempt to search through all the possible compounds that could be used for organic solar cells computational methods are used to save time.
+Density functional theory calculations have been used extensively to be able to predict the properties at a nice medium between the accuracy of \emph{ab inito} and the speed of semi empirical methods. Unfortunately, while they are faster than \emph{ab inito} calculations, DFT calculations still take a lot longer than to be desired. This problem is compounded when much of the interest in computational chemistry is being able to test molecules more quickly than could be done in the lab.
 
 Because of these problems, there is a need to rapidly predict the properties of molecules so that. Machine learning has been shown to be a fast way to predict properties of many systems and specifically, has been shown to be a viable way to predict properties of molecules\cite{hansen_assessment_2013} \cite{montavon_machine_2013}.
 
-For this study, we will be looking at using different machine learning methods in conjunction with Density Functional Theory calculations to be able to predict the highest occupied molecular orbital (HOMO), lowest unoccupied molecular orbital (LUMO), and the band gap.
+For this study, we will be looking at using different machine learning methods in conjunction with Density Functional Theory calculations to be able to predict the highest occupied molecular orbital (HOMO), lowest unoccupied molecular orbital (LUMO), and the band gap. The end goal of such methods being that they are faster ways to predict properties, but yet still retain enough accuracy such that they can be used to make quantitative .... about which structures would be of the most interest.
+
+There are many common features that are seen in many molecules, things like methyls, phenyls, and thiophenes so the goal of this is to make use of the fact that those structures have already been computed many times before, and one might expect that on average there is a common effect of each given group that can be used such that it does not require recomputing all of those effects for ever single instance of the feature. (By using that similarity, we expect to make calculations faster.)
 
 
 \section{Naming Scheme}
 
-To be able to represent these molecular structures to the machine learning algorithms, a common naming scheme was formed such that it could be readily converted into a vector form. This naming scheme exploits the planar nature of benzobisazoles as well as their cruxiformic structure. Because of this regularity, they can be readily be structured in such a way that
-The naming scheme is broken down into three separate components. These parts are the core, the sides, and the options.
+To be able to represent these molecular structures to the machine learning algorithms, a common naming scheme was formed such that it could be readily converted into a vector form. This naming scheme exploits the planar nature of benzobisazoles as well as their cruxiformic structure. Because of this regularity, they can be readily be structured in such a way that they can be converted into a format that is easy to represent to the machine learning algorithms. The naming scheme is broken down into three separate components. These parts are the core, the sides, and the options.
 
 \begin{figure}[H]
   \begin{center}
@@ -64,7 +66,7 @@ The sides of the name are split into three groups based on the location in the s
   \label{fig:aryl}
 \end{figure}
 
-These aryl groups are specifically were chosen because they are all highly conjugated. (NEEDS MORE)
+These aryl groups are specifically were chosen because they are all highly conjugated. These structures in particular have also been shown to be useful in the tuning of optoelectronic properties of benzobisazoles [CITE]. (NEEDS MORE)
 
 Each side is then broken down into components of Aryl, X groups, and R groups. Aryl groups are indicated by the numbers 2 through 9 as seen in Figure \ref{fig:aryl}. Aryl groups form the main chain part of the structure, they are able to extend the length of the chain and some have places for R groups (4, 5, 6, 7).
 
@@ -92,16 +94,14 @@ Each side is then broken down into components of Aryl, X groups, and R groups. A
   \label{tab:xrgroups}
 \end{table}
 
-The X and R groups were picked based on their electron withdrawing/donating characteristics. These functional groups have also been shown to aide in the tuning of the optoelectronic properties of molecules [CITE].
+The X and R groups were picked based on their electron withdrawing/donating characteristics. Just like with the aryl groups, these functional groups have also been shown to aid in the tuning of the optoelectronic properties of molecules [CITE]. Previous work with these structures has also shown that HOMO and LUMO values have a strong correlation with the Hammet parameters of each of these functional groups (include?).
 
 
-X and R groups are both composed of the same set of substituents seen in Table \ref{tab:xrgroups}. X groups are the letters $A$ through $L$, and R groups are $a$ through $l$. The main difference between X and R groups is where they are placed in the chain, whereas R-Groups are placed on the Aryl group that directly proceeds them. As can be seen in Table \ref{tab:aryl} R-groups come in pairs of two. These groups can either be the same or different(?). Because there are some Aryl groups that do not allow any R-groups there is an additional spacer R-group that is designated as *. It has no effect on the structure of the molecule, it is just used as a place holder when converting the names to a feature vector.
+X and R groups are both composed of the same set of substituents seen in Table \ref{tab:xrgroups}. X groups are the letters $A$ through $L$, and R groups are $a$ through $l$. The main difference between X and R groups is where they are placed in the chain, whereas R-Groups are placed on the Aryl group that directly proceeds them. As can be seen in Figure \ref{fig:aryl} R-groups come in pairs of two. These groups can either be the same or different(?). Because there are some Aryl groups that do not allow any R-groups there is an additional spacer R-group that is designated as *. It has no effect on the structure of the molecule, it is just used as a place holder when converting the names to a feature vector.
 
 Starting from the core going outward, side chains take two main forms. They are either an X-group (which terminates the entire side) or they are a triplet of an Aryl group and two R-groups. If it is an aryl group triplet, then the process can continue. (X-group $\vert$ [Aryl, R-group, R-group])
 
 The final component of the naming scheme is a set of options. These are broken up into two main classes. The first pair of options are the polymer options and they indicate how many times the molecules is repeated along the horizontal (n) axis (chain?) or the vertical (m) axis (chain?). The second set of options is a set of x, y, and z that are the number of times that the molecule is stacked in each direction(?).
-
-Structures were picked using this naming scheme to try to cover as many combinations of cores, sides, and options.
 
 
 \section{Feature Vectors}
@@ -113,12 +113,11 @@ Using this naming scheme, it is apparent that there are multiple ways that these
 
 \subsection{Naive}
 
-The first, and most simplistic, is to take all the possible combinations and create a binary vector from it with each 1 in a location representing a particular combination. From the regular structure of the benzobisazoles, this can be done at the aryl group triplet level.
-The problem with this approach is that is the size of the feature vector groups proportional to the length of the longest side chain. Another problem with this type of feature vector it does not exploit similarities in the structure. (one might expect a chlorine two steps away from the core to cause about the same effect as one one step away times some decay factor).
+The first, and most simplistic, is to take all the possible combinations and create a binary vector from it with each 1 in a location representing a particular combination. From the regular structure of the benzobisazoles, this can be done at the aryl group triplet level. For each aryl group triplet as they extend out from the core, a boolean vector based on the components of the triplet is formed. The problem with this approach is that is the size of the feature vector groups proportional to the length of the longest side chain. This can be especially problematic if some of the training molecules are much larger than the others. Another problem with this type of feature vector it does not exploit similarities in the structure. (one might expect a chlorine two steps away from the core to cause about the same effect as one one step away times some decay factor).
 
 
 \subsection{Decay}
-To counter act these problems a second feature vector was created that used a decay function \eqref{decay}. $A$, $H$, and $p$ are arbitrary constants used to adjust the decay. By grouping similar components together, it normalizes implicit features (charge, Hammet parameters, and etc).
+To counter act these problems a second feature vector was created that used a decay function \eqref{decay}. $A$, $H$, and $p$ are arbitrary constants used to adjust the rate of decay. By grouping similar components together, it normalizes implicit features (charge, Hammet parameters, and etc).
 
 \begin{equation}\label{decay}
     Value = \sum_i^n (A d_i^{-H})^{p}
@@ -161,53 +160,37 @@ $$ finalGAP = predict(Decay, newGAP) $$
 
 \section{Machine Learning Methods}
 
-In previous work \cite{montavon_machine_2013}, it has been shown that different machine learning algorithms have had drastically different performance when used to predict molecular properties. Because of this, seven algorithms were picked to compare. These were mean value, linear regression, linear ridged regression, tree regression, k-nearest neighbors, and support vector machines. The mean value method is used as a baseline for all of the other methods.
+In previous work \cite{montavon_machine_2013}, it has been shown that different machine learning algorithms have had drastically different performance when used to predict molecular properties. Because of this, seven algorithms were picked for comparison. These were mean value, linear regression, linear ridged regression, tree regression, k-nearest neighbors, and support vector machines. The support vector machines method was then broken down into two methods, one using a gaussian kernel, and the other using a laplacian kernel. All of the algorithms used were (000000000) from scikit-learn [CITE]. The mean value method is used as a baseline for all of the other methods with its interpretation being the error that would be gotten by just guessing.
 
  \begin{figure}[H]
    \begin{center}
      \includegraphics[width=5in]{figures/surf.png}
    \end{center}
-   \caption{Scan of SVM parameters C and $\gamma$}
+   \caption{Example scan of test errors (eV) as a function of SVM parameters C and $\gamma$. The minimum located in the center corresponding to the ideal pair of parameter values to use for the machine learning model.}
    \label{fig:scan}
  \end{figure}
 
 \section{Procedure}
 
-Roughly 1100 benzobisazole structures were built. Once they were built the structures were optimized using Density Functional Theory (DFT) with B3LYP/6-31g*. After the optimization, the molecules were then ran with Time Dependent Density Functional Theory (TDDFT) with B3LYP/6-31g*. Beyond the 1100 benzobisazole structures, about 1000 other structures were collected for comparison.
+Roughly 1100 benzobisazole structures were picked to to cover as many combinations of cores, sides, and options as possible. In terms of aryl triplets, all of the structures comprised of at most 4 triplets per side. (This allowed for a constant vector size for the naive feature vector.) (Many of these structures were from prior studies of different features of benzobisazoles) Once they were built the structures were optimized using Density Functional Theory (DFT) with B3LYP/6-31g*. After the optimization, the molecules were then ran with Time Dependent Density Functional Theory (TDDFT) with B3LYP/6-31g*. Beyond the 1100 benzobisazole structures, about 1000 other structures were collected for comparison. The DFT calculations were done on using the computing cluster Marcy from Bucknell.
 
 Once all the calculations were completed, the resulting log files were parsed for HOMO, LUMO, and Band Gap values. From there, the first three feature vectors were constructed (Naive, Decay, Decay with Distance Correction) and the resulting vectors were stored with the parsed log data.
 
-Once all the data and feature vectors were collected, they were feed into the machine learning algorthms. For each feature vector, property, method set the methods relevant parameters were optimized (C, $\gamma$, max depth, $\alpha$, n neighbors). Then using these optimized parameters, the machine learning models were trained using k-folds for cross validation, specifically using 10 folds. All of the results were then tabulated and compared based on their mean absolute errors (MAE) calculated as the distance the ML predicted value was from DFT calculated value.
+Once all the data and feature vectors were collected, they were feed into the machine learning algorithms. For each feature vector, property, method set the methods relevant parameters were optimized (C, $\gamma$, max depth, $\alpha$, n neighbors). Then using these optimized parameters, the machine learning models were trained using k-folds for cross validation, specifically using 10 folds [CITE]. All of the results were then tabulated and compared based on their mean absolute errors (MAE) calculated as the distance the ML predicted value was from DFT calculated value. All of the machine learning calculations were done on a consumer single quad core computer.
 
 \section{Results}
 
  \begin{figure}[H]
    \begin{center}
-     \includegraphics[width=4.25in]{figures/gapbars.pdf}
+     \includegraphics[width=5.5in]{figures/allbars2.pdf}
    \end{center}
-   % \caption{Band Gap Results}
-   \label{fig:scan}
- \end{figure}
-
- \begin{figure}[H]
-   \begin{center}
-     \includegraphics[width=4.25in]{figures/homobars.pdf}
-   \end{center}
-   % \caption{HOMO Results}
-   \label{fig:scan}
- \end{figure}
-
- \begin{figure}[H]
-   \begin{center}
-     \includegraphics[width=4.25in]{figures/lumobars.pdf}
-   \end{center}
-   % \caption{LUMO Results}
-   \label{fig:scan}
+   \caption{Results}
+   \label{fig:results}
  \end{figure}
 
 \section{Conclusions}
 
-Overall, the support vector machines with Gaussian kernel had the best performance across all of the goal features and all of the feature vectors. The optimized parameters for the method were $C \approx 10$ and $\gamma \approx 0.05$.
+Overall, the support vector machines with Gaussian kernel had the best performance across all of the goal features and all of the feature vectors. This matches similarly too the results seen by .... [CITE]; however, they found that the laplacian kernel performed the best. The suspected reason for the difference in the two results is thought to be because their method involved single atoms as features, whereas this method was dealing with entire functional groups. The smoothness of the gaussian distribution is probably a better estimator in that (especially with something like a phenyl ring). The optimized parameters for the method were found to be $C \approx 10$ and $\gamma \approx 0.05$.
 
 For the feature vectors, the decay was the best performing feature vector with the parameters $A = 1, H = 1, p = 1$. (0.71) As well as having a better overall performance, it is also much faster than the naive feature vector because it has fewer components. This increased speed could especially be seen when training the data.
 With the addition of predicted HOMO/LUMO values for the decay feature vector, the performance for estimating the goal features increased by about 25\%.
@@ -223,16 +206,16 @@ To run the original DFT and TDDFT calculations for these molecules took about 35
 
 For possible future work, the first thing to do would be to collect more data. For this study, the majority of the structures were monomers with 1-4 rings out from the core. This could be expanded to include larger polymers and monomers.
 
-None of the feature vectors take into account the Kuhn expression for polymer chains. This leads to high errors as n or m > 1. The problem is not as pronounced when using SVM with Gaussian kernels because of how they decay (?). Preliminary work with this addition corrected seems to be the best way to account for polymerization of benzobisazoles.
+None of the feature vectors take into account the Kuhn expression for polymer chains. This leads to high errors when $n>1$ or $m>1$. The problem is not as pronounced when using SVM with Gaussian kernels because of how they decay (?). Preliminary work with this addition corrected seems to be the best way to account for polymerization of benzobisazoles.
 
 Another possible expansion of work would be to test with more properties of the molecules such as total energy, dipole, and etc.
 
 As an end goal, it would be nice to generalize these machine learning methods such that they could be used for any structure.
 
-... The methods presented here would be used as a first line filter to rule out large amounts molecular structures that do not meet the desired requirements such that more time could be allocated only on the structures that show the most promise instead of relying on intuition. As can be seen by these methods speeds and relative accuracy, they fit the bill for this kind of work.
+The methods presented here would be used as a first line filter to rule out large amounts molecular structures that do not meet the desired requirements such that more time could be allocated only on the structures that show the most promise instead of relying on intuition. As can be seen by these methods speeds and relative accuracy, these machine learning methods work really well for this task. In the same amount of time that one could calculate a property of a structure using DFT the same property can be predicted here for millions of structures. From those structures one could imagine taking the best 1\% of the structures and running progressively more accurate methods.
 
-% In addition to the machine learning methods used in this study, there was also an attempt to use Neural Networks for the predictions. Unfortunatly, the results were not satisfactory relative to the amount of time required (0.20 eV MAE). Drastic changes to the network made minimal differences to the final error. This is attirbuted to inexperience with proper methodologies with Neural Networks.
-
+% In addition to the machine learning methods used in this study, there was also an attempt to use Neural Networks for the predictions. Unfortunately, the results were not satisfactory relative to the amount of time required (0.20 eV MAE). Drastic changes to the network made minimal differences to the final error. This is attributed to inexperience with proper methodologies with Neural Networks.
+% Also, the methods mentioned in \cite{hansen_assessment_2013} were tested and the results were not as good as any of the other name based features (0.25-0.35 eV). In addition to the accuracy problems, it had severe performance problems because it relys on $O(n^2)$ elements in each feature vector where $n$ is the number of atoms in the structure.
 
 \nocite{ruddigkeit_enumeration_2012}
 \nocite{darley_beyond_2008}
