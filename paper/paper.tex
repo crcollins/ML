@@ -27,7 +27,7 @@
 \maketitle
 
 \begin{abstract}
-Because there are always more molecules to test than time, there is a need to quickly be able to rule out structures that are unsuitable for further research. The method presented here takes advantage of common structural features of molecules to decrease the required computational expense that can be seen equivalent Density Functional Theory calculations. By using machine learning methods, the HOMO, LUMO, and band gap can be predicted to within 0.09 eV, 0.08 eV, and 0.10 eV respectively for benzobisazoles. These results also come with the added benefit of being 30,000,000 times faster than the equivalent DFT calculation.
+Because there are always more molecules to test than time, there is a need to quickly be able to rule out structures that are unsuitable for further research. The method presented here takes advantage of common structural features of molecules to decrease the required computational expense that can be seen equivalent Density Functional Theory calculations. By using machine learning methods, the HOMO, LUMO, and band gap can be predicted to within 0.09 eV, 0.08 eV, and 0.10 eV respectively for the benzobisazole structures tested. These results also come with the added benefit of being 30,000,000 times faster than the equivalent DFT calculation.
 \end{abstract}
 
 % \doublespace
@@ -44,7 +44,13 @@ For this study, we will be looking at using different machine learning methods i
 There are many common features that are seen in many molecules, things like methyls, phenyls, and thiophenes so the goal of this is to make use of the fact that those structures have already been computed many times before, and one might expect that on average there is a common effect of each given group that can be used such that it does not require recomputing all of those effects for ever single instance of the feature. (By using that similarity, we expect to make calculations faster.)
 
 
-\section{Naming Scheme}
+\section{Systems of Interest}
+
+For this study, we will be looking at the optoelectronic properties of benzobisazoles, a class of molecules comprised of a three fused ring core. This core is crucial in the fact that it it is highly conjugated which allows for better electron transfer and consequently make them better as organic solar cells. In addition to the core of the benzobisazole there are four different directions from the core that can be extended with various rings and other conjugated systems to attempt to tune the properties of the molecule.
+
+To aid in electron transfer, these structures were picked such that they were highly planer \hl{(angle function?)}
+
+\subsection{Naming Scheme}
 
 To be able to represent these molecular structures to the machine learning algorithms, a common naming scheme was formed such that it could be readily converted into a vector form. This naming scheme exploits the planar nature of benzobisazoles as well as their cruxiformic structure. Because of this regularity, they can be readily be structured in such a way that they can be converted into a format that is easy to represent to the machine learning algorithms. The naming scheme is broken down into three separate components. These parts are the core, the sides, and the options.
 
@@ -140,6 +146,14 @@ $M_i$ is a normalizing factor for each segment in the chain. By doing this, all 
 
 The problem with this feature vector is that it is not separable.
 
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[width=4.5in]{figures/features.pdf}
+  \end{center}
+  \caption{Visual Representations of the respective Feature Vector types. \textbf{1.} Naive. \textbf{2.} Decay. \textbf{3.} Decay with length corrections.}
+  \label{fig:features}
+\end{figure}
+
 \subsection{Decay with Predictions}
 
 In attempt to exploit the relation between HOMO, LUMO, and band gap, another feature vector was constructed. The feature vector was composed of a combination of the decay vector plus the addition of the two properties that were not being trained for. This was done in two stages, the first stage involved running the machine learning calculations as normal and then storing those results.
@@ -164,6 +178,20 @@ $$ finalGAP = predict(Decay, newGAP) $$
 
 In previous work \cite{montavon_machine_2013}, it has been shown that different machine learning algorithms have had drastically different performance when used to predict molecular properties. Because of this, seven algorithms were picked for comparison. These were mean value, linear regression, linear ridged regression, tree regression, k-nearest neighbors, and support vector machines. The support vector machines method was then broken down into two methods, one using a gaussian kernel, and the other using a laplacian kernel. All of the algorithms used were \hl{(000000000) from scikit-learn [CITE]}. The mean value method is used as a baseline for all of the other methods with its interpretation being the error that would be gotten by just guessing.
 
+
+\hl{????}
+\subsection{Mean Value}
+\subsection{Linear Regression}
+\subsection{Linear Ridge Regression}
+\subsection{Tree Regression}
+\subsection{k-Nearest Neighbors}
+\subsection{Support Vector Machines}
+\subsubsection{Gaussian Kernel}
+\subsubsection{Laplacian Kernel}
+\hl{????}
+
+
+
  \begin{figure}[H]
    \begin{center}
      \includegraphics[width=5in]{figures/surf.png}
@@ -186,13 +214,13 @@ Once all the data and feature vectors were collected, they were feed into the ma
    \begin{center}
      \includegraphics[width=5.5in]{figures/allbars2.pdf}
    \end{center}
-   \caption{Results}
+   \caption{Results. The far left column of each of the graphs can be seen as a baseline value for the set. So from there, any values that are lower than that value are better (with the optimal value being 0.0 eV). For the numerical values, refer to the Appendix.}
    \label{fig:results}
  \end{figure}
 
 \section{Conclusions}
 
-Overall, the support vector machines with Gaussian kernel had the best performance across all of the goal features and all of the feature vectors. This matches similarly too the results seen by \hl{.... [CITE]}; however, they found that the laplacian kernel performed the best. The suspected reason for the difference in the two results is thought to be because their method involved single atoms as features, whereas this method was dealing with entire functional groups. The smoothness of the gaussian distribution is probably a better estimator in that (especially with something like a phenyl ring). The optimized parameters for the method were found to be $C \approx 10$ and $\gamma \approx 0.05$.
+Overall, the support vector machines with Gaussian kernel had the best performance across all of the goal features and all of the feature vectors. This matches similarly to the results seen by \hl{.... [CITE]}; however, they found that the laplacian kernel performed the best. The suspected reason for the difference in the two results is thought to be because their method involved single atoms as features, whereas this method was dealing with entire functional groups. The smoothness of the gaussian distribution is probably a better estimator in that (especially with something like a phenyl ring). The optimized parameters for the method were found to be $C \approx 10$ and $\gamma \approx 0.05$.
 
 For the feature vectors, the decay was the best performing feature vector with the parameters $A = 1, H = 1, p = 1$. \hl{(0.71)} As well as having a better overall performance, it is also much faster than the naive feature vector because it has fewer components. This increased speed could especially be seen when training the data.
 With the addition of predicted HOMO/LUMO values for the decay feature vector, the performance for estimating the goal features increased by about 25\%.
@@ -437,7 +465,7 @@ The methods presented here would be used as a first line filter to rule out larg
                                & SVM Laplace  & 0.0922 $\pm$ 0.009 \\
     \hline\hline
   \end{tabular}
-  \label{tab:gapresults}
+  \label{tab:lumoresults}
 \end{table}
 
 
