@@ -136,7 +136,7 @@ The bad thing about this kind of decay function is that it is not separable if $
 
 \subsection{Decay with Length Corrections}
 
-One problem with the first decay type feature vector is it makes the assumption that all the distances between are the same length. Since the effects of atoms are highly dependent on distance this sort of assumption is problematic for heterogeneous side groups. \eqref{decay2} Something something. This normalizes all the lengths such that longer structures will increase the distance more than shorter structures.
+One problem with the first decay type feature vector is it makes the assumption that all the distances between are the same length. Since the effects of atoms are highly dependent on distance this sort of assumption is problematic for heterogeneous side groups. \eqref{decay2} \hl{Something something}. This normalizes all the lengths such that longer structures will increase the distance more than shorter structures.
 
 $M_i$ is a normalizing factor for each segment in the chain. By doing this, all the lengths are normalized relative to the first element.
 
@@ -179,16 +179,17 @@ $$ finalGAP = predict(Decay, newGAP) $$
 In previous work \cite{montavon_machine_2013}, it has been shown that different machine learning algorithms have had drastically different performance when used to predict molecular properties. Because of this, seven algorithms were picked for comparison. These were mean value, linear regression, linear ridged regression, tree regression, k-nearest neighbors, and support vector machines. The support vector machines method was then broken down into two methods, one using a gaussian kernel, and the other using a laplacian kernel. All of the algorithms used were \hl{(000000000) from scikit-learn [CITE]}. The mean value method is used as a baseline for all of the other methods with its interpretation being the error that would be gotten by just guessing.
 
 
-\hl{????}
-\subsection{Mean Value}
-\subsection{Linear Regression}
-\subsection{Linear Ridge Regression}
-\subsection{Tree Regression}
-\subsection{k-Nearest Neighbors}
-\subsection{Support Vector Machines}
-\subsubsection{Gaussian Kernel}
-\subsubsection{Laplacian Kernel}
-\hl{????}
+\hl{???? information about the different methods used?}
+% \subsection{Mean Value}
+% \subsection{Linear Regression}
+% \subsection{Linear Ridge Regression}
+% \subsection{Tree Regression}
+% \subsection{k-Nearest Neighbors}
+% \subsection{Support Vector Machines}
+% \subsubsection{Gaussian Kernel}
+% $$k(x, x') = exp\left( - \frac{1}{2 \sigma^2} || x - x' ||^2 \right)$$
+% \subsubsection{Laplacian Kernel}
+% $$k(x, x') = exp\left( - \frac{1}{\sigma} | x - x' | \right)$$
 
 
 
@@ -196,13 +197,13 @@ In previous work \cite{montavon_machine_2013}, it has been shown that different 
    \begin{center}
      \includegraphics[width=5in]{figures/surf.png}
    \end{center}
-   \caption{Example scan of test errors (eV) as a function of SVM parameters C and $\gamma$. The minimum located in the center corresponding to the ideal pair of parameter values to use for the machine learning model.}
+   \caption{Example scan of test errors (eV) as a function of SVM parameters C and $\gamma$. The minimum located in the center corresponding to the ideal pair of parameter values to use for the machine learning model. Similar scan procedures were done for the parameters of the other models to find the lowest testing error.}
    \label{fig:scan}
  \end{figure}
 
 \section{Procedure}
 
-Roughly 1100 benzobisazole structures were picked to to cover as many combinations of cores, sides, and options as possible. In terms of Aryl triplets, all of the structures comprised of at most 4 triplets per side. (This allowed for a constant vector size for the naive feature vector.) (Many of these structures were from prior studies of different features of benzobisazoles) Once they were built the structures were optimized using Density Functional Theory (DFT) with B3LYP/6-31g*. After the optimization, the molecules were then ran with Time Dependent Density Functional Theory (TDDFT) with B3LYP/6-31g*. Beyond the 1100 benzobisazole structures, about 1000 other structures were collected for comparison. The DFT calculations were done using the computing cluster Marcy from Bucknell and Gaussian 09. The machine learning algorithms used were the ones implemented in the \hl{Scikit-Learn Python Library}.
+Roughly 1100 benzobisazole structures were picked to to cover as many combinations of cores, sides, and options as possible. In terms of Aryl triplets, all of the structures comprised of at most 4 triplets per side. (This allowed for a constant vector size for the naive feature vector.) (Many of these structures were from prior studies of different features of benzobisazoles) Once they were built the structures were optimized using Density Functional Theory (DFT) with B3LYP/6-31g*. After the optimization, the molecules were then ran with Time Dependent Density Functional Theory (TDDFT) with B3LYP/6-31g*. \hl{Beyond the 1100 benzobisazole structures, about 1000 other structures were collected for comparison.} The DFT calculations were done using the computing cluster Marcy from Bucknell and Gaussian 09. The machine learning algorithms used were the ones implemented in the \hl{Scikit-Learn Python Library}.
 
 Once all the calculations were completed, the resulting log files were parsed for HOMO, LUMO, and Band Gap values. From there, the first three feature vectors were constructed (Naive, Decay, Decay with Distance Correction) and the resulting vectors were stored with the parsed log data.
 
