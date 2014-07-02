@@ -58,7 +58,7 @@ Unfortunately, the machine learning algorithms used for this study do not native
   \begin{center}
     \includegraphics[width=4in]{figures/cores.pdf}
   \end{center}
-  \caption{TXY and CXY Cores}
+  \caption{TXY and CXY Cores. The $R^{H1}$, $R^v$, and $R^{H2}$ positions correspond to the left chain, the two vertical chains, and the right chain respectively.}
   \label{fig:cores}
 \end{figure}
 
@@ -70,13 +70,13 @@ The sides of the name are split into three groups based on the location in the s
   \begin{center}
     \includegraphics[width=4in]{figures/aryl.pdf}
   \end{center}
-  \caption{Aryl Groups}
+  \caption{List of all the Aryl Groups and their respective identifiers. The $R^1$ and $R^2$ positions list possible places for added substituents.}
   \label{fig:Aryl}
 \end{figure}
 
 These Aryl groups are specifically were chosen because they are all highly conjugated. These structures in particular have also been shown to be useful in the tuning of optoelectronic properties of benzobisazoles \hl{[CITE]. (NEEDS MORE)}
 
-Each side is then broken down into components of Aryl, X groups, and R groups. Aryl groups are indicated by the numbers 2 through 9 as seen in Figure \ref{fig:Aryl}. Aryl groups form the main chain part of the structure, they are able to extend the length of the chain and some have places for R groups (4, 5, 6, 7).
+Each side is then broken down into components of Aryl, X groups, and R groups. Aryl groups are indicated by the numbers 2 through 9 as seen in Figure \ref{fig:Aryl}. Aryl groups form the main chain part of the structure, they are able to extend the length of the chain and some have places for R groups (4, 5, 6, 7) to allow for better tuning of the optoelectronic properties.
 
 \begin{table}[H]
   \centering
@@ -87,15 +87,15 @@ Each side is then broken down into components of Aryl, X groups, and R groups. A
     A/a     & Hydrogen  \\
     B/b     & Chlorine  \\
     C/c     & Bromine   \\
-    D/d     & CN        \\
-    E/e     & CCH       \\
-    F/f     & OH        \\
-    G/g     & SH        \\
-    H/h     & $NH_2$    \\
-    I/i     & $CH_3$    \\
+    D/d     & Cyano     \\
+    E/e     & Alkyne    \\
+    F/f     & Hydroxy   \\
+    G/g     & Thiol     \\
+    H/h     & Amine     \\
+    I/i     & Methyl    \\
     J/j     & Phenyl    \\
     K/k     & TMS       \\
-    L/l     & $OCH_3$   \\
+    L/l     & Methoxy   \\
     *       & Spacer    \\
     \hline
   \end{tabular}
@@ -104,8 +104,7 @@ Each side is then broken down into components of Aryl, X groups, and R groups. A
 
 The X and R groups were picked based on their electron withdrawing/donating characteristics. Just like with the Aryl groups, these functional groups have also been shown to aid in the tuning of the optoelectronic properties of molecules \hl{[CITE]}. Previous work with these structures has also shown that HOMO and LUMO values have a strong correlation with the Hammet parameters of each of these functional groups \hl{(include?)}.
 
-
-X and R groups are both composed of the same set of substituents seen in Table \ref{tab:xrgroups}. X groups are the letters $A$ through $L$, and R groups are $a$ through $l$. The main difference between X and R groups is where they are placed in the chain, whereas R-Groups are placed on the Aryl group that directly proceeds them. As can be seen in Figure \ref{fig:Aryl} R-groups come in pairs of two. These groups can either be the same or different\hl{(?)}. Because there are some Aryl groups that do not allow any R-groups there is an additional spacer R-group that is designated as *. It has no effect on the structure of the molecule, it is just used as a place holder when converting the names to a feature vector.
+X and R groups are both composed of the same set of substituents seen in Table \ref{tab:xrgroups}. X groups are the letters $A$ through $L$, and R groups are $a$ through $l$. The only difference between X and R groups is where they are placed in the chain. R-Groups are placed on in the $R^1$ and $R^2$ positions of Aryl groups, whereas X groups on the other hand attach to the ends of chains and terminate them. As can be seen in Figure \ref{fig:Aryl} R-groups come in pairs of two. These groups can either be the same or different\hl{(?)}. Because there are some Aryl groups that do not allow any R-groups there is an additional spacer R-group that is designated as *. It has no effect on the structure of the molecule, it is just used as a place holder when converting the names to a feature vector.
 
 Starting from the core going outward, side chains take two main forms. They are either an X-group (which terminates the entire side) or they are a triplet of an Aryl group and two R-groups. If it is an Aryl group triplet, then the process can continue. (X-group $\vert$ [Aryl, R-group, R-group])
 
@@ -114,9 +113,9 @@ The final component of the naming scheme is a set of options. These are broken u
 
 \section{Feature Vectors}
 
-To be able to represent these structures to the computer, and consequently to the machine learning algorithms they must be vectorized.
+To be able to represent these structures to the computer, and consequently to the machine learning algorithms they must be vectorized. Fortunately, having a regular naming scheme as described is very beneficial in being able to vectorize these structures without having to account for every atom in the structure.
 
-Using this naming scheme, it is apparent that there are multiple ways that these could be converted into feature vectors for use in machine learning.
+Using this naming scheme, there are multiple ways that these names could be converted into feature vectors for use in machine learning. \hl{more}
 
 
 \subsection{Naive}
@@ -128,7 +127,7 @@ The first, and most simplistic, is to take all the possible combinations and cre
 To counter act these problems a second feature vector was created that used a decay function \eqref{decay}. $A$, $H$, and $p$ are arbitrary constants used to adjust the rate of decay. By grouping similar components together, it normalizes implicit features (charge, Hammet parameters, and etc).
 
 \begin{equation}\label{decay}
-    Value = \sum_i^n (A d_i^{-H})^{p}
+    V = \sum_i^n (A d_i^{-H})^{p}
 \end{equation}
 
 The bad thing about this kind of decay function is that it is not separable if $H \times p \le 1$. This would mean that there is no unique conversion between a given feature vector and its associated name/structure.
@@ -141,7 +140,7 @@ One problem with the first decay type feature vector is it makes the assumption 
 $M_i$ is a normalizing factor for each segment in the chain. By doing this, all the lengths are normalized relative to the first element.
 
 \begin{equation}\label{decay2}
-    Value = \sum_i^n \left(A \left(\frac{d_i}{M_i}\right)^{-H} \right)^{p}
+    V = \sum_i^n \left(A \left(\frac{d_i}{M_i}\right)^{-H} \right)^{p}
 \end{equation}
 
 The problem with this feature vector is that it is not separable.
@@ -207,7 +206,7 @@ Roughly 1100 benzobisazole structures were picked to to cover as many combinatio
 
 Once all the calculations were completed, the resulting log files were parsed for HOMO, LUMO, and Band Gap values. From there, the first three feature vectors were constructed (Naive, Decay, Decay with Distance Correction) and the resulting vectors were stored with the parsed log data.
 
-Once all the data and feature vectors were collected, they were feed into the machine learning algorithms. For each feature vector, property, method set the methods relevant parameters were optimized (C, $\gamma$, max depth, $\alpha$, n neighbors). Then using these optimized parameters, the machine learning models were trained using k-folds for cross validation, specifically using 10 folds [CITE]. All of the results were then tabulated and compared based on their mean absolute errors (MAE) calculated as the distance the ML predicted value was from DFT calculated value. All of the machine learning calculations were done on a single consumer quad core computer.
+Once all the data and feature vectors were collected, they were feed into the machine learning algorithms. For each feature vector, property, method set the methods relevant parameters were optimized (C, $\gamma$, max depth, $\alpha$, n neighbors). Then using these optimized parameters, the machine learning models were trained using k-folds for cross validation, specifically using 10 folds \hl{[CITE]}. All of the results were then tabulated and compared based on their mean absolute errors (MAE) calculated as the distance the ML predicted value was from DFT calculated value. All of the machine learning calculations were done on a single consumer quad core computer.
 
 \section{Results}
 
