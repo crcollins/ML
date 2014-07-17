@@ -1,4 +1,5 @@
 import numpy
+from scipy.spatial.distance import cdist
 from scipy.interpolate import griddata
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
@@ -199,4 +200,25 @@ def surface(data, colormap="jet"):
     surf = ax.plot_surface(XX, YY, data, rstride=1, cstride=1, cmap=colormap, linewidth=0, antialiased=False, shade=True)
     ax.set_zlim(data.min(), data.max())
     fig.colorbar(surf, shrink=0.5, aspect=5)
+    plt.show()
+
+
+def plot_error_density(X, y, clf, folds=10):
+    dvals = cdist(X, X)
+    dvals = dvals.sum(0)
+    dvals2 = 1/cdist(X, X)
+    dvals2[dvals2 == numpy.inf]=0
+    dvals2 = dvals.sum(0)
+    folds = cross_validation.KFold(y.shape[0], n_folds=folds)
+    for i, (train_idx, test_idx) in enumerate(folds):
+        X_train = X[train_idx]
+        X_test = X[test_idx]
+        y_train = y[train_idx].T.tolist()[0]
+        y_test = y[test_idx].T.tolist()[0]
+        dvals_test = dvals[test_idx]
+        dvals2_test = dvals2[test_idx]
+        clf.fit(X_train, y_train)
+        results = numpy.abs(clf.predict(X_test) - y_test)
+        plt.plot(dvals_test, results.T, 'b.')
+        plt.plot(dvals2_test, results.T, 'r.')
     plt.show()
