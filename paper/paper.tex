@@ -27,13 +27,14 @@
 \maketitle
 
 \begin{abstract}
-\hl{Because there are always more molecules to test than time}, there is a need to quickly be able to rule out structures that are unsuitable for further research. The method presented in this paper takes advantage of common structural features of molecules to decrease the required computational expense that can be seen equivalent Density Functional Theory calculations. By using machine learning methods, the HOMO, LUMO, and band gap can be predicted to within 0.09 eV, 0.08 eV, and 0.10 eV respectively for the benzobisazole structures tested. These results also come with the added benefit of being 30,000,000 times faster than the equivalent DFT calculation.
+\hl{Because there are always more molecules to test than time}, there is a need to quickly be able to rule out structures that are unsuitable for further research. The method presented in this paper takes advantage of common structural features of molecules to decrease the required computational expense that can be seen equivalent Density Functional Theory calculations. By using machine learning methods, the HOMO, LUMO, and band gap can be predicted to within 0.09 eV, 0.08 eV, and 0.10 eV respectively for the benzobisazole structures tested. These results also come with the added benefit of being 30,000,000 times faster than the equivalent DFT calculations.
 \end{abstract}
 
 % \doublespace
 \section{Introduction}
 
-There are many different molecule groups that are being looked at for use as organic solar cells \hl{[CITE]}. One such group is the benzobisazoles \hl{[CITE]}. There are many possible molecules that could be used as organic solar cells, the problem is current organic solar cells have poor efficiency \hl{[CITE]}. To attempt to search through all the possible compounds that could be used for organic solar cells computational methods are used to save time.
+There are many different molecule groups that are being looked at for use as organic solar cells \hl{[CITE]}. One such group is the benzobisazoles \hl{[CITE]}. To optimize the optoelectronic properties of molecules for use in solar cells, often various electron donating and electron accepting groups are added to the structure to shift electron density. For testing all of the possible structures (even in small sets) this is not feasible in the lab. To reduce some of the time required, and to expand the total search space, computational methods such as density functional theory have been used to predict the properties of molecules fairly rapidly. Unfortunately, these calculations also have their own limits in the amount of structures that can be tested in a reasonable time frame.
+ \hl{There are many possible molecules that could be used as organic solar cells, the problem is current organic solar cells have poor efficiency [CITE]. To attempt to search through all the possible compounds that could be used for organic solar cells computational methods are used to save time.}
 
 Density functional theory calculations have been used extensively to be able to predict the properties at a nice medium between the accuracy of \emph{ab inito} and the speed of semi empirical methods. Unfortunately, while they are faster than \emph{ab inito} calculations, DFT calculations still take a lot longer than to be desired. This problem is compounded when one of the of the interests in computational chemistry is being able to test molecules more quickly than could be done in the lab.
 
@@ -48,7 +49,7 @@ There are many common features that are seen in many molecules, things like meth
 
 For this study, we will be looking at the optoelectronic properties of benzobisazoles, a class of molecules comprised of a three fused ring core. This core is crucial in the fact that it it is highly conjugated which allows for better electron transfer and consequently make them better as organic solar cells. In addition to the core of the benzobisazole there are four different directions from the core that can be extended with various rings and other conjugated systems to attempt to tune the properties of the molecule.
 
-For the side chains, structures were picked based on their ability to tune electronic properties. In the case of the main backbone structures, they were all picked because they are all highly planar and highly conjugated. Both of these features to aid in electron transfer. For the various substiuents, they picked based off their known ability to tune electronic properties \hl{(repeating...)}. The properties of this study have been shown in previous research to be correlated with Hammett Parameters. \hl{cool story...}
+For the side chains, structures were picked based on their ability to tune electronic properties. In the case of the main backbone structures, they were all picked because they are all highly planar and highly conjugated. Both of these features to aid in electron transfer. For the various substiuents, they picked based off their known ability to tune electronic properties \hl{(repeating...)}. The properties of this study have been shown in previous research to be correlated with Hammett Parameters. \hl{cool story...} Some of the trends as seen in previous work are that adding electron donating groups to the vertical axis and electron withdrawing  groups to the horizontal axis lead to higher HOMO energies and lower LUMO which in turn leads to an overall lower band gap. Part of the goal of this study is to take these general trends and synthesize them into a model that imparts a useful numerical value.
 
 \subsection{Naming Scheme}
 
@@ -166,6 +167,7 @@ The second stage involved concatenating the original feature vectors to the vect
 $$ newGAP = [Decay, predictedHOMO, predictedLUMO] $$
 $$ newHOMO = [Decay, predictedLUMO, predictedGAP] $$
 $$ newLUMO = [Decay, predictedGAP, predictedHOMO] $$
+\hl{MAYBE ILLUSTRATIONS?}
 
 These feature vectors were then feed back into the machine learning algorithms to get the final results.
 
@@ -175,8 +177,7 @@ $$ finalGAP = predict(Decay, newGAP) $$
 
 \section{Machine Learning Methods}
 
-In previous work \cite{montavon_machine_2013}, it has been shown that different machine learning algorithms have had drastically different performance when used to predict molecular properties. Because of this, seven algorithms were picked for comparison. These were mean value, linear regression, linear ridged regression, tree regression, k-nearest neighbors, and support vector machines. The support vector machines method was then broken down into two methods, one using a gaussian kernel, and the other using a laplacian kernel. All of the algorithms used were \hl{(000000000) from scikit-learn [CITE]}. The mean value method is used as a baseline for all of the other methods with its interpretation being the error that would be gotten by just guessing.
-
+In previous work \cite{montavon_machine_2013}, it has been shown that different machine learning algorithms have had drastically different performance when used to predict molecular properties. Because of this, seven algorithms were picked for comparison. These were mean value, linear regression, linear ridged regression, tree regression, k-nearest neighbors, and support vector machines. The support vector machines method was then broken down into two methods, one using a gaussian kernel, and the other using a laplacian kernel. The mean value method is used as a baseline for all of the other methods with its interpretation being the error that would be gotten by just guessing. All of the algorithms utilized were as implemented in the \hl{scikit-learn python library [CITE]}.
 
 \hl{???? information about the different methods used?}
 % \subsection{Mean Value}
@@ -202,9 +203,9 @@ In previous work \cite{montavon_machine_2013}, it has been shown that different 
 
 \section{Procedure}
 
-Roughly 1100 benzobisazole structures were picked to to cover as many combinations of cores, sides, and options as possible. In terms of Aryl triplets, all of the structures comprised of at most 4 triplets per side. (This allowed for a constant vector size for the naive feature vector.) (Many of these structures were from prior studies of different features of benzobisazoles) Once they were built the structures were optimized using Density Functional Theory (DFT) with B3LYP/6-31g*. After the optimization, the molecules were then ran with Time Dependent Density Functional Theory (TDDFT) with B3LYP/6-31g*. \hl{Beyond the 1100 benzobisazole structures, about 1000 other structures were collected for comparison.} The DFT calculations were done using the computing cluster Marcy from Bucknell and Gaussian 09. The machine learning algorithms used were the ones implemented in the \hl{Scikit-Learn Python Library}.
+Roughly 1100 benzobisazole structures were picked to to cover as many combinations of cores, sides, and options as possible. In terms of Aryl triplets, all of the structures comprised of at most 4 triplets per side. This allowed for a constant vector size for the naive feature vector. (Many of these structures were from prior studies of different features of benzobisazoles). Once they were built, the structures were optimized using Density Functional Theory (DFT) with B3LYP/6-31g*. After the optimization, the molecules were then ran with Time Dependent Density Functional Theory (TDDFT) with B3LYP/6-31g*. \hl{Beyond the 1100 benzobisazole structures, about 1000 other structures were collected for comparison.} The DFT calculations were done using the computing cluster \hl{Marcy from Bucknell} and Gaussian 09. The machine learning algorithms used were the ones implemented in the \hl{Scikit-Learn Python Library}.
 
-Once all the calculations were completed, the resulting log files were parsed for HOMO, LUMO, and Band Gap values. From there, the first three feature vectors were constructed (Naive, Decay, Decay with Distance Correction) and the resulting vectors were stored with the parsed log data.
+Once all the DFT calculations were completed, the resulting log files were parsed for HOMO, LUMO, and Band Gap values. From there, the first three feature vectors were constructed (Naive, Decay, Decay with Distance Correction) and the resulting vectors were stored with the parsed log data.
 
 Once all the data and feature vectors were collected, they were feed into the machine learning algorithms. For each feature vector, property, method set the methods relevant parameters were optimized (C, $\gamma$, max depth, $\alpha$, n neighbors). Then using these optimized parameters, the machine learning models were trained using k-folds for cross validation, specifically using 10 folds \hl{[CITE]}. All of the results were then tabulated and compared based on their mean absolute errors (MAE) calculated as the distance the ML predicted value was from DFT calculated value. All of the machine learning calculations were done on a single consumer quad core computer.
 
@@ -269,7 +270,7 @@ None of the feature vectors take into account the Kuhn expression for polymer ch
 
 Another possible expansion of work would be to test with more properties of the molecules such as total energy, dipole, and etc. \hl{preliminary results have shown that the naive feature vector works the best with predicting total energy (117 hartree MAE with svm, 2800 hartree MAE with mean) (about 2x as effective). This could be because the total energy is more dependent on the structure as a whole rather than the localization to the core.}
 
-As an end goal, it would be nice to generalize these machine learning methods such that they could be used for any structure. \hl{While the} but perhaps there is a way to do it based off localized functional groups.
+As an end goal, it would be nice to generalize these machine learning methods such that they could be used for any structure. \hl{While the...} but perhaps there is a way to do it based off localized functional groups.
 
 The methods presented here would be used as a first line filter to rule out large amounts molecular structures that do not meet the desired requirements such that more time could be allocated only on the structures that show the most promise instead of relying on intuition. As can be seen by these methods speeds and relative accuracy, these machine learning methods work really well for this task. In the same amount of time that one could calculate a property of a structure using DFT the same property can be predicted here for millions of structures. From those structures one could imagine taking the best 1\% of the structures and running progressively more accurate methods.
 
