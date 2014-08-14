@@ -33,16 +33,16 @@
 % \doublespace
 \section{Introduction}
 
-There are many different molecule groups that are being looked at for use as organic solar cells \hl{[CITE]}. One such group is the benzobisazoles \hl{[CITE]}. To optimize the optoelectronic properties of molecules for use in solar cells, often various electron donating and electron accepting groups are added to the structure to shift electron density. For testing all of the possible structures (even in small sets) this is not feasible in the lab. To reduce some of the time required, and to expand the total search space, computational methods such as density functional theory have been used to predict the properties of molecules fairly rapidly. Unfortunately, these calculations also have their own limits in the amount of structures that can be tested in a reasonable time frame.
+There are many different molecule groups that are being looked at for use as organic solar cells \hl{[CITE]}. One such group is the benzobisazoles \hl{[CITE]}. To optimize the optoelectronic properties of molecules for use in solar cells, various electron donating and electron accepting groups are added to the structure to shift electron density. For testing all of the possible structures (even in small sets) this is not feasible in the lab. To reduce some of the time required, and to expand the total search space, computational methods such as density functional theory have been used to predict the properties of molecules fairly rapidly. Unfortunately, these calculations also have their own limits in the amount of structures that can be tested in a reasonable time frame.
  \hl{There are many possible molecules that could be used as organic solar cells, the problem is current organic solar cells have poor efficiency [CITE]. To attempt to search through all the possible compounds that could be used for organic solar cells computational methods are used to save time.}
 
 Density functional theory calculations have been used extensively to be able to predict the properties at a nice medium between the accuracy of \emph{ab inito} and the speed of semi empirical methods. Unfortunately, while they are faster than \emph{ab inito} calculations, DFT calculations still take a lot longer than to be desired. This problem is compounded when one of the of the interests in computational chemistry is being able to test molecules more quickly than could be done in the lab.
 
-Because of these problems, there is a need to rapidly predict the properties of molecules so that. Machine learning has been shown to be a fast way to predict properties of many systems and specifically, has been shown to be a viable way to predict properties of molecules\cite{hansen_assessment_2013} \cite{montavon_machine_2013}.
+To take on both of both of these problems, we will be looking machine learning methods to both be able to predict molecular properties, but with the goal that these calculations would be inexpensive but retain the same level of accuracy. In recent work, various machine learning methods have been shown to be fast ways to predict properties of many systems and specifically, has been shown to be a viable way to predict properties of molecules\cite{hansen_assessment_2013} \cite{montavon_machine_2013}.
 
 For this study, we will be looking at using different machine learning methods in conjunction with Density Functional Theory calculations to be able to predict the highest occupied molecular orbital (HOMO), lowest unoccupied molecular orbital (LUMO), and the band gap. The end goal of such methods being that they are faster ways to predict properties, but yet still retain enough accuracy such that they can be used to make quantitative \hl{....} about which structures would be of the most interest.
 
-There are many common features that are seen in many molecules, things like methyls, phenyls, and thiophenes so the goal of this is to make use of the fact that those structures have already been computed many times before, and one might expect that on average there is a common effect of each given group that can be used such that it does not require recomputing all of those effects for ever single instance of the feature. (By using that similarity, we expect to make calculations faster.)
+There are many common functional groups and structural features that are seen repeated across many molecules, so the goal of this is to make use of the fact that those structures have already been computed many times before, and one might expect that on average there is a common effect of each given group that can be used such that it does not require recomputing all of those effects for ever single instance of the feature. (By using that similarity, we expect to make calculations faster.)
 
 
 \section{Systems of Interest}
@@ -103,7 +103,7 @@ Each side is then broken down into components of Aryl, X groups, and R groups. A
   \label{tab:xrgroups}
 \end{table}
 
-The X and R groups were picked based on their electron withdrawing/donating characteristics. Just like with the Aryl groups, these functional groups have also been shown to aid in the tuning of the optoelectronic properties of molecules \hl{[CITE]}. Previous work with these structures has also shown that HOMO and LUMO values have a strong correlation with the Hammet parameters of each of these functional groups \hl{(include?)}.
+The X and R groups were picked based on their electron withdrawing/donating characteristics. Just like with the Aryl groups, these functional groups have also been shown to aid in the tuning of the optoelectronic properties of molecules \hl{[CITE]}. Previous work with these structures has also shown that HOMO and LUMO values have a strong correlation with the Hammet parameters of each of these functional groups \hl{(include? REPEAT...)}.
 
 X and R groups are both composed of the same set of substituents seen in Table \ref{tab:xrgroups}. X groups are the letters $A$ through $L$, and R groups are $a$ through $l$. The only difference between X and R groups is where they are placed in the chain. R-Groups are placed on in the $R^1$ and $R^2$ positions of Aryl groups, whereas X groups on the other hand attach to the ends of chains and terminate them. As can be seen in Figure \ref{fig:Aryl} R-groups come in pairs of two. These groups can either be the same or different\hl{(?)}. Because there are some Aryl groups that do not allow any R-groups there is an additional spacer R-group that is designated as *. It has no effect on the structure of the molecule, it is just used as a place holder when converting the names to a feature vector.
 
@@ -114,37 +114,40 @@ The final component of the naming scheme is a set of options. These are broken u
 
 \section{Feature Vectors}
 
-To be able to represent these structures to the computer, and consequently to the machine learning algorithms they must be vectorized. Fortunately, having a regular naming scheme as described is very beneficial in being able to vectorize these structures without having to account for every atom in the structure.
+Representations of molecular structures are \hl{asdsa}, unfortunately, this intuition of molecular structure is not understood by computers. Instead of holistic pictures of the entire structure, they are left with lists of atom coordinates and bond connections. \hl{This could possibly be done by images of molecular structures (MASSIVE amounts of data).}
 
-Using this naming scheme, there are multiple ways that these names could be converted into feature vectors for use in machine learning. \hl{more}
+To represent these structures to the computer, and consequently to the machine learning algorithms, they must be converted into some sort of a structured vector. Fortunately, starting from the naming scheme described simplifies a lot of this work in that it is very regular\hl{??}. It is also beneficial in that many of the components of the name are larger structural features instead of individual atoms which would require larger vectors \hl{(meaning more computation required)}.
+
+Using the naming scheme described, there are multiple ways that these names could be converted into feature vectors for use in machine learning. These range from methods purely from the different structural combinations to methods that take into account the cruxiformic structure of the benzobisazoles. \hl{more}
 
 
 \subsection{Naive}
 
-The first, and most simplistic, is to take all the possible combinations and create a binary vector from it with each $1$ in a location representing a particular combination. From the regular structure of the benzobisazoles, this can be done at the Aryl group triplet level. For each Aryl group triplet as they extend out from the core, a boolean vector based on the components of the triplet is formed. The problem with this approach is that is the size of the feature vector groups proportional to the length of the longest side chain. This can be especially problematic if some of the training molecules are much larger than the others. Another problem with this type of feature vector it does not exploit similarities in the structure. (one might expect a chlorine two steps away from the core to cause about the same effect as one one step away times some decay factor).
+The first, and most simplistic, is to take all the possible combinations and create a binary vector from it with each $1$ in a location representing a particular combination. From the regular structure of the benzobisazoles, this can be done at the Aryl group triplet level. For each Aryl group triplet as they extend out from the core, a boolean vector based on the components of the triplet is formed.
+
+The problem with this approach is that is the size of the feature vector groups proportional to the length of the longest side chain. This can be especially problematic if some of the training molecules are much larger than the others. Another problem with this type of feature vector it does not exploit similarities in the structure. \hl{(one might expect a chlorine two steps away from the core to cause about the same effect as one one step away times some decay factor)}.
 
 
 \subsection{Decay}
-To counter act these problems a second feature vector was created that used a decay function \eqref{decay}. $A$, $H$, and $p$ are arbitrary constants used to adjust the rate of decay. By grouping similar components together, it normalizes implicit features (charge, Hammet parameters, and etc).
+To counter act these problems a second feature vector was created that used a decay function \eqref{decay}. $A$, $H$, and $p$ are arbitrary constants used to adjust the rate of decay. This adjustment of feature structure allows the grouping similar components together which in turn gives an implicit normalization of specific component attributes (charge, Hammet parameters, electronegativity, and etc).
 
 \begin{equation}\label{decay}
     V = \sum_i^n (A d_i^{-H})^{p}
 \end{equation}
 
-The bad thing about this kind of decay function is that it is not separable if $H \times p \le 1$. This would mean that there is no unique conversion between a given feature vector and its associated name/structure.
+The bad thing about this kind of decay function is that it is not separable if $H \times p \le 1$. This would mean that there is no unique conversion between a given feature vector and its associated name/structure. \hl{In the case of using this method as a sieve, this is not an issue.}
 
 
 \subsection{Decay with Length Corrections}
 
 One problem with the first decay type feature vector is it makes the assumption that all the distances between are the same length. Since the effects of atoms are highly dependent on distance this sort of assumption is problematic for heterogeneous side groups. \eqref{decay2} \hl{Something something}. This normalizes all the lengths such that longer structures will increase the distance more than shorter structures.
 
-$M_i$ is a normalizing factor for each segment in the chain. By doing this, all the lengths are normalized relative to the first element.
-
 \begin{equation}\label{decay2}
     V = \sum_i^n \left(A \left(\frac{d_i}{M_i}\right)^{-H} \right)^{p}
 \end{equation}
 
-The problem with this feature vector is that it is not separable.
+$M_i$ is a normalizing factor for each segment in the chain. By doing this, all the lengths are added to the chain are stored relative to the length of the first element in the chain. The problem with this feature vector is that it is not separable.
+
 
 \begin{figure}[H]
   \begin{center}
@@ -155,6 +158,8 @@ The problem with this feature vector is that it is not separable.
 \end{figure}
 
 \subsection{Decay with Predictions}
+
+\hl{INSERT LINEAR LUMO-HOMO PLOT?}
 
 In attempt to exploit the relation between HOMO, LUMO, and band gap, another feature vector was constructed. The feature vector was composed of a combination of the decay vector plus the addition of the two properties that were not being trained for. This was done in two stages, the first stage involved running the machine learning calculations as normal and then storing those results.
 
@@ -167,7 +172,7 @@ The second stage involved concatenating the original feature vectors to the vect
 $$ newGAP = [Decay, predictedHOMO, predictedLUMO] $$
 $$ newHOMO = [Decay, predictedLUMO, predictedGAP] $$
 $$ newLUMO = [Decay, predictedGAP, predictedHOMO] $$
-\hl{MAYBE ILLUSTRATIONS?}
+\hl{MAYBE ILLUSTRATIONS? instead of psuedocode...}
 
 These feature vectors were then feed back into the machine learning algorithms to get the final results.
 
@@ -177,7 +182,7 @@ $$ finalGAP = predict(Decay, newGAP) $$
 
 \section{Machine Learning Methods}
 
-In previous work \cite{montavon_machine_2013}, it has been shown that different machine learning algorithms have had drastically different performance when used to predict molecular properties. Because of this, seven algorithms were picked for comparison. These were mean value, linear regression, linear ridged regression, tree regression, k-nearest neighbors, and support vector machines. The support vector machines method was then broken down into two methods, one using a gaussian kernel, and the other using a laplacian kernel. The mean value method is used as a baseline for all of the other methods with its interpretation being the error that would be gotten by just guessing. All of the algorithms utilized were as implemented in the \hl{scikit-learn python library [CITE]}.
+In the work by Montavon et al., it has been shown that different machine learning algorithms have had drastically different performances when used to predict molecular properties. Because of this, seven algorithms were picked for comparison. These were mean value, linear regression, linear ridged regression, tree regression, k-nearest neighbors, and support vector machines. The support vector machines method was then broken down into two methods, one using a Gaussian kernel, and the other using a Laplacian kernel. The mean value method is used as a baseline for all of the other methods with its interpretation being the error that would be gotten by just guessing.
 
 \hl{???? information about the different methods used?}
 % \subsection{Mean Value}
@@ -197,17 +202,18 @@ In previous work \cite{montavon_machine_2013}, it has been shown that different 
    \begin{center}
      \includegraphics[width=5in]{figures/surf.png}
    \end{center}
-   \caption{Example scan of test errors (eV) as a function of SVM parameters C and $\gamma$. The minimum located in the center corresponding to the ideal pair of parameter values to use for the machine learning model. Similar scan procedures were done for the parameters of the other models to find the lowest testing error.}
+   \caption{Example scan of test errors (eV) as a function of SVM hyperparameters C and $\gamma$. The minimum located in the center corresponding to the ideal pair of hyperparameter values to use for the machine learning model. Similar scan procedures were done for the hyperparameters of the other models to find the lowest testing error.}
    \label{fig:scan}
  \end{figure}
 
 \section{Procedure}
 
-Roughly 1100 benzobisazole structures were picked to to cover as many combinations of cores, sides, and options as possible. In terms of Aryl triplets, all of the structures comprised of at most 4 triplets per side. This allowed for a constant vector size for the naive feature vector. (Many of these structures were from prior studies of different features of benzobisazoles). Once they were built, the structures were optimized using Density Functional Theory (DFT) with B3LYP/6-31g*. After the optimization, the molecules were then ran with Time Dependent Density Functional Theory (TDDFT) with B3LYP/6-31g*. \hl{Beyond the 1100 benzobisazole structures, about 1000 other structures were collected for comparison.} The DFT calculations were done using the computing cluster \hl{Marcy from Bucknell} and Gaussian 09. The machine learning algorithms used were the ones implemented in the \hl{Scikit-Learn Python Library}.
+Roughly 1100 benzobisazole structures were picked to to cover as many combinations of cores, sides, and options as possible. In terms of Aryl triplets, all of the structures comprised of at most 4 triplets per side. This allowed for a constant vector size for the naive feature vector. (Many of these structures were from prior studies of different features of benzobisazoles). Once they were built, the structures were optimized using Density Functional Theory (DFT) with B3LYP/6-31g*. After the optimization, the molecules were then ran with Time Dependent Density Functional Theory (TDDFT) again with B3LYP/6-31g*. \hl{Beyond the 1100 benzobisazole structures, about 1000 other structures were collected for comparison.}
 
-Once all the DFT calculations were completed, the resulting log files were parsed for HOMO, LUMO, and Band Gap values. From there, the first three feature vectors were constructed (Naive, Decay, Decay with Distance Correction) and the resulting vectors were stored with the parsed log data.
+Once all the DFT calculations were completed, the resulting log files were processed for the HOMO, LUMO, and Band Gap energy values. From there, the first three feature vectors were constructed (Naive, Decay, Decay with Distance Correction) and the resulting vectors were stored with the energy data.
 
-Once all the data and feature vectors were collected, they were feed into the machine learning algorithms. For each feature vector, property, method set the methods relevant parameters were optimized (C, $\gamma$, max depth, $\alpha$, n neighbors). Then using these optimized parameters, the machine learning models were trained using k-folds for cross validation, specifically using 10 folds \hl{[CITE]}. All of the results were then tabulated and compared based on their mean absolute errors (MAE) calculated as the distance the ML predicted value was from DFT calculated value. All of the machine learning calculations were done on a single consumer quad core computer.
+Once all the data and feature vectors were collected, they were feed into the machine learning algorithms. For each feature vector, property, method set the methods relevant hyperparameters were optimized (C, $\gamma$, max depth, $\alpha$, n neighbors). Then using these optimized hyperparameters, the machine learning models were trained using k-folds for cross validation, specifically using 10 folds \hl{[CITE]}. All of the results were then tabulated and compared based on their mean absolute errors (MAE) calculated as the distance the ML predicted value was from DFT calculated value.
+
 
 \section{Results}
 
@@ -221,16 +227,19 @@ Once all the data and feature vectors were collected, they were feed into the ma
 
 \section{Conclusions}
 
-Overall, the support vector machines with Gaussian kernel had the best performance across all of the goal features and all of the feature vectors. This matches similarly to the results seen by \hl{.... [CITE]}; however, they found that the laplacian kernel performed the best. The suspected reason for the difference in the two results is thought to be because their method involved single atoms as features, whereas this method was dealing with entire functional groups. The smoothness of the gaussian distribution is probably a better estimator in that (especially with something like a phenyl ring). The optimized parameters for the method were found to be $C \approx 10$ and $\gamma \approx 0.05$.
+Overall, the support vector machines with Gaussian kernel had the best performance across all of the machine learning methods and all of the feature vectors. This matches similarly to the results seen in \hl{.... [CITE]}; however, they found that the Laplacian kernel performed the best. The suspected reason for the difference in the two results is thought to be because the method used in that study involved single atoms as features, whereas this method was dealing with entire functional groups. The smoothness of the gaussian distribution is probably a better estimator in that (especially with something like a phenyl ring). For the SVM with Gaussian kernel, the optimized hyperparameters to be $C \approx 10$ and $\gamma \approx 0.05$ for all of the properties.
 
-For the feature vectors, the decay was the best performing feature vector with the parameters $A = 1, H = 1, p = 1$. \hl{(0.71)} As well as having a better overall performance, it is also much faster than the naive feature vector because it has fewer components. This increased speed could especially be seen when training the data.
-With the addition of predicted HOMO/LUMO values for the decay feature vector, the performance for estimating the goal features increased by about 25\%.
+For the feature vectors, the decay was the best performing feature vector with the parameters $A = 1, H = 1, p = 1$. \hl{(0.71)} As well as having a better overall performance, it is also much faster than the naive feature vector because it has fewer components. This increased speed could especially be seen when training the data. This can be attributed to the time complexity of $O(n^2) or O(n^3)$ where n is the number of dimensions.
+
+With the addition of predicted HOMO/LUMO/Band Gap energies for the decay feature vector, the performance for estimating the goal features increased by about 25\%. The performance improvement is mostly attributed to the linear reaction between the three values.
 
 Unexpectedly, the decay function with distance corrections did not perform any better than the regular decay feature vector. In theory, this should have worked better with heterogeneous side chains, but its use seemed to only increase the MAE. We think that the cause of this is due to the lack of sampling of largely heterogeneous side chains. So perhaps, if the same tests were done with only heterogeneous side chains adding the correction factor might decrease the total error.
 
+In the results there is a large increase in the performance of the linear models (linear regression and linear ridge regression) when using the decay vector with predictions. This can be largely accounted for the linear relation between the HOMO, the LUMO, and the Band Gap energy levels $$BandGap \approx 0.93 (LUMO - HOMO) - 0.15$$.
+
 There were a few anomalies in the results. The most noticeable is the long tail distribution of errors. As one might expect, structures where features overlap ($A\_TON\_4ed\_A$, 0.5 eV) there were higher MAE values. Unfortunately, a few molecules within the set had unusually high band gap errors (ex: $8A\_TON\_A\_A$, 1.1 eV) and we have no explanation for why that occurred.
 
-To run the original DFT and TDDFT calculations for these molecules took about 35,0000 CPU hours. Calculating the same properties using these machine learning methods took about 4 seconds for each property for all 1100 structures. Because of the way that machine learning algorithms work, the majority of the time spent for each of these calculations is spent in the training phase; fortunately, this calculation is only required once so by . Once the models have been trained, these calculations are often reduced to just matrix multiplications leading to it taking just 0.1 seconds to calculate each property for all 1100 structures.
+To run the original DFT and TDDFT calculations for these molecules took about 35,0000 CPU hours. Calculating the same properties using these machine learning methods took about 4 seconds for each property for all 1100 structures. Because of the way that machine learning algorithms work, the majority of the time spent for each of these calculations is spent in the training phase; fortunately, this calculation is only required once so by pre-trainting the models the total time required can be greatly reduced. Once the models have been trained, these calculations are often reduced to just matrix multiplications leading to it taking just 0.1 seconds to calculate each property for all 1100 structures.
 
 
 \section{Future Work}
@@ -270,12 +279,17 @@ None of the feature vectors take into account the Kuhn expression for polymer ch
 
 Another possible expansion of work would be to test with more properties of the molecules such as total energy, dipole, and etc. \hl{preliminary results have shown that the naive feature vector works the best with predicting total energy (117 hartree MAE with svm, 2800 hartree MAE with mean) (about 2x as effective). This could be because the total energy is more dependent on the structure as a whole rather than the localization to the core.}
 
-As an end goal, it would be nice to generalize these machine learning methods such that they could be used for any structure. \hl{While the...} but perhaps there is a way to do it based off localized functional groups.
+As an end goal, it would be nice to generalize these machine learning methods such that they could be used for any structure. \hl{The naming scheme described would not generalize to other structures, but perhaps a similar treatment of functional groups would lend itself to similar results.}
 
 The methods presented here would be used as a first line filter to rule out large amounts molecular structures that do not meet the desired requirements such that more time could be allocated only on the structures that show the most promise instead of relying on intuition. As can be seen by these methods speeds and relative accuracy, these machine learning methods work really well for this task. In the same amount of time that one could calculate a property of a structure using DFT the same property can be predicted here for millions of structures. From those structures one could imagine taking the best 1\% of the structures and running progressively more accurate methods.
 
 \hl{In addition to the machine learning methods used in this study, there was also an attempt to use Neural Networks for the predictions. Unfortunately, the results were not satisfactory relative to the amount of time required (0.20 eV MAE). Drastic changes to the network made minimal differences to the final error. This is attributed to inexperience with proper methodologies with Neural Networks.}
-\hl{Also, the methods mentioned in }\cite{hansen_assessment_2013} \hl{were tested and the results were not as good as any of the other name based features (0.25-0.35 eV). In addition to the accuracy problems, it had severe performance problems because it relys on $O(n^2)$ elements in each feature vector where $n$ is the number of atoms in the structure. To save time, only structures with $<45$ atoms total were tested, leaving about 450 structures.}
+
+\hl{Also, the methods mentioned in }\cite{hansen_assessment_2013} \hl{were tested and the results were not as good as any of the other name based features (0.25-0.35 eV). In addition to the accuracy problems, it had severe performance problems because it relies on $O(n^2)$ elements in each feature vector where $n$ is the number of atoms in the structure. To save time, only structures with $<45$ atoms total were tested, leaving about 450 structures. Attempting the full data set is not feasible with all the structures/atoms. By using all the structures and using PCA to reduce the dimensionality down from 52,000 to 500 retains 99.97\% of the variability of the data (0.24 $\pm$ 0.04 eV MAE). To run the full data set it is expected to take on the order of 10s to 100s of days. (plus SVM does not work well when features >> samples)}
+
+\section{Acknowledgments}
+
+\hl{David Yaron, Gregorie Montavon, Bucknell (Marcy), University of North Georgia Department of Chemistry and Biochemistry, ...}
 
 \nocite{ruddigkeit_enumeration_2012}
 \nocite{darley_beyond_2008}
@@ -529,5 +543,11 @@ The methods presented here would be used as a first line filter to rule out larg
 % svm gauss       0.0792332669 $\pm$ 0.0091141118
 % svm laplace     0.0922304705 $\pm$ 0.0092304161
 
+\section{Other}
+
+The DFT calculations were done using the computing cluster \hl{Marcy from Bucknell} and Gaussian 09. The machine learning algorithms used were the ones implemented in the \hl{Scikit-Learn Python Library}. All of the machine learning calculations were done on a single consumer quad core computer.
+
+OTHER
+numpy, scipy, matplotlib
 
 \end{document}
