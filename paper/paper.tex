@@ -27,7 +27,7 @@
 \maketitle
 
 \begin{abstract}
-\hl{Because there are always more molecules to test than time}, there is a need to quickly be able to rule out structures that are unsuitable for further research. The method presented in this paper takes advantage of common structural features of molecules to decrease the required computational expense that can be seen equivalent Density Functional Theory calculations. By using machine learning methods, the HOMO, LUMO, and band gap can be predicted to within 0.09 eV, 0.08 eV, and 0.10 eV respectively for the benzobisazole structures tested. These results also come with the added benefit of being 30,000,000 times faster than the equivalent DFT calculations.
+\hl{Because there are always more molecules to test than time}, there is a need to quickly be able to rule out structures that are unsuitable for further research. The method presented in this paper takes advantage of common structural features of molecules to decrease the required computational expense that can be seen equivalent Density Functional Theory calculations. By using supervised machine learning methods, the HOMO, LUMO, and band gap can be predicted to within 0.09 eV, 0.08 eV, and 0.10 eV respectively for the benzobisazole structures tested. These results also come with the added benefit of being 30,000,000 times faster than the equivalent DFT calculations.
 \end{abstract}
 
 % \doublespace
@@ -38,7 +38,7 @@ There are many different molecule groups that are being looked at for use as org
 
 Density functional theory calculations have been used extensively to be able to predict the properties at a nice medium between the accuracy of \emph{ab inito} and the speed of semi empirical methods. Unfortunately, while they are faster than \emph{ab inito} calculations, DFT calculations still take a lot longer than to be desired. This problem is compounded when one of the of the interests in computational chemistry is being able to test molecules more quickly than could be done in the lab.
 
-To take on both of both of these problems, we will be looking machine learning methods to both be able to predict molecular properties, but with the goal that these calculations would be inexpensive but retain the same level of accuracy. In recent work, various machine learning methods have been shown to be fast ways to predict properties of many systems and specifically, has been shown to be a viable way to predict properties of molecules\cite{hansen_assessment_2013} \cite{montavon_machine_2013}.
+To take on both of both of these problems, we will be looking machine learning methods to both be able to predict molecular properties inexpensively but retain the same level of accuracy as DFT. In recent work, various machine learning methods have been shown to be fast ways to predict properties of many systems and specifically, has been shown to be a viable way to predict properties of molecules\cite{hansen_assessment_2013} \cite{montavon_machine_2013}.
 
 For this study, we will be looking at using different machine learning methods in conjunction with Density Functional Theory calculations to be able to predict the highest occupied molecular orbital (HOMO), lowest unoccupied molecular orbital (LUMO), and the band gap. The end goal of such methods being that they are faster ways to predict properties, but yet still retain enough accuracy such that they can be used to make quantitative \hl{....} about which structures would be of the most interest.
 
@@ -180,9 +180,26 @@ $$ finalHOMO = predict(Decay, newHOMO) $$
 $$ finalLUMO = predict(Decay, newLUMO) $$
 $$ finalGAP = predict(Decay, newGAP) $$
 
+\subsection{Coulomb Matrix}
+(Montavon et al.)
+$$
+M_{ij} =
+\begin{cases}
+    0.5 Z_i^{2.4} &: i = j \\
+    \frac{Z_i Z_j}{|R_i - R_j|} &: i \ne j \\
+\end{cases}
+$$
+Specifically, to reduce the dimensionality Principal Component Analysis was used to reduce these vectors from 52,000 elements to 500 elements.
+
+(Take lower triangle and convert the matrix to a vector)
+$$M \rightarrow M_v$$
+$$PCA(M_v) \rightarrow M_{smaller}$$
+
+\hl{Should I add this and include those results?}
+
 \section{Machine Learning Methods}
 
-In the work by Montavon et al., it has been shown that different machine learning algorithms have had drastically different performances when used to predict molecular properties. Because of this, seven algorithms were picked for comparison. These were mean value, linear regression, linear ridged regression, tree regression, k-nearest neighbors, and support vector machines. The support vector machines method was then broken down into two methods, one using a Gaussian kernel, and the other using a Laplacian kernel. The mean value method is used as a baseline for all of the other methods with its interpretation being the error that would be gotten by just guessing.
+In the work by Montavon et al., it has been shown that different machine learning algorithms have had drastically different performances when used to predict molecular properties. Because of this, seven algorithms were picked for comparison. These were mean value, linear regression, linear ridged regression, tree regression, k-nearest neighbors, and support vector machines. The support vector machines method was then broken down into two methods, one using a Gaussian kernel, and the other using a Laplacian kernel. The mean value method is used as a baseline for all of the other methods with its interpretation being the error that would be gotten by just guessing. The mean value method does not use at the feature vector to make its prediction, so all of the different methods will have the same result for it. \hl{Should I add NN?}
 
 \hl{???? information about the different methods used?}
 % \subsection{Mean Value}
@@ -202,7 +219,7 @@ In the work by Montavon et al., it has been shown that different machine learnin
    \begin{center}
      \includegraphics[width=5in]{figures/surf.png}
    \end{center}
-   \caption{Example scan of test errors (eV) as a function of SVM hyperparameters C and $\gamma$. The minimum located in the center corresponding to the ideal pair of hyperparameter values to use for the machine learning model. Similar scan procedures were done for the hyperparameters of the other models to find the lowest testing error.}
+   \caption{Example scan of test errors (eV) as a function of SVM hyperparameters C and $\gamma$. The minimum located in the center corresponding to the ideal pair of hyperparameter values to use for the machine learning model. Similar scan procedures were done for the hyperparameters of the other models to find the lowest testing error.\hl{Relevant?}}
    \label{fig:scan}
  \end{figure}
 
@@ -210,9 +227,18 @@ In the work by Montavon et al., it has been shown that different machine learnin
 
 Roughly 1100 benzobisazole structures were picked to to cover as many combinations of cores, sides, and options as possible. In terms of Aryl triplets, all of the structures comprised of at most 4 triplets per side. This allowed for a constant vector size for the naive feature vector. (Many of these structures were from prior studies of different features of benzobisazoles). Once they were built, the structures were optimized using Density Functional Theory (DFT) with B3LYP/6-31g*. After the optimization, the molecules were then ran with Time Dependent Density Functional Theory (TDDFT) again with B3LYP/6-31g*. \hl{Beyond the 1100 benzobisazole structures, about 1000 other structures were collected for comparison.}
 
+ \begin{figure}[H]
+   \begin{center}
+     \includegraphics[width=5in]{figures/overall.pdf}
+   \end{center}
+   \caption{\hl{include something similar?}}
+   \label{fig:scan}
+ \end{figure}
+
+
 Once all the DFT calculations were completed, the resulting log files were processed for the HOMO, LUMO, and Band Gap energy values. From there, the first three feature vectors were constructed (Naive, Decay, Decay with Distance Correction) and the resulting vectors were stored with the energy data.
 
-Once all the data and feature vectors were collected, they were feed into the machine learning algorithms. For each feature vector, property, method set the methods relevant hyperparameters were optimized (C, $\gamma$, max depth, $\alpha$, n neighbors). Then using these optimized hyperparameters, the machine learning models were trained using k-folds for cross validation, specifically using 10 folds \hl{[CITE]}. All of the results were then tabulated and compared based on their mean absolute errors (MAE) calculated as the distance the ML predicted value was from DFT calculated value.
+Once all the data and feature vectors were collected, they were feed into the machine learning algorithms. Specifically, we will be looking at supervised learning, meaning that the methods will be trained on (feature vector, property) pairs and then for the testing they will be given just feature vectors and be expected to estimate the respective property value. For each feature vector, property, method set the methods relevant hyperparameters were optimized (C, $\gamma$, max depth, $\alpha$, n neighbors). Then using these optimized hyperparameters, the machine learning models were trained using k-folds for cross validation, specifically using 10 folds \hl{[CITE]}. k-Folds and the cross validation are used to ensure that the final model generated is not biased towards the particular set of data used for training (overfitting). All of the results were then tabulated and compared based on their mean absolute errors (MAE) calculated as the distance the ML predicted value was from DFT calculated value.
 
 
 \section{Results}
@@ -229,7 +255,7 @@ Once all the data and feature vectors were collected, they were feed into the ma
 
 Overall, the support vector machines with Gaussian kernel had the best performance across all of the machine learning methods and all of the feature vectors. This matches similarly to the results seen in \hl{.... [CITE]}; however, they found that the Laplacian kernel performed the best. The suspected reason for the difference in the two results is thought to be because the method used in that study involved single atoms as features, whereas this method was dealing with entire functional groups. The smoothness of the gaussian distribution is probably a better estimator in that (especially with something like a phenyl ring). For the SVM with Gaussian kernel, the optimized hyperparameters to be $C \approx 10$ and $\gamma \approx 0.05$ for all of the properties.
 
-For the feature vectors, the decay was the best performing feature vector with the parameters $A = 1, H = 1, p = 1$. \hl{(0.71)} As well as having a better overall performance, it is also much faster than the naive feature vector because it has fewer components. This increased speed could especially be seen when training the data. This can be attributed to the time complexity of $O(n^2) or O(n^3)$ where n is the number of dimensions.
+For the feature vectors, the decay was the best performing feature vector with the parameters $A = 1, H = 1, p = 1$. \hl{(0.71)} As well as having a better overall performance, it is also much faster than the naive feature vector because it has fewer components. This increased speed could especially be seen when training the data. \hl{This can be attributed to the time complexity of $O(n^2) or O(n^3)$ where n is the number of dimensions.}
 
 With the addition of predicted HOMO/LUMO/Band Gap energies for the decay feature vector, the performance for estimating the goal features increased by about 25\%. The performance improvement is mostly attributed to the linear reaction between the three values.
 
@@ -289,7 +315,7 @@ The methods presented here would be used as a first line filter to rule out larg
 
 \section{Acknowledgments}
 
-\hl{David Yaron, Gregorie Montavon, Bucknell (Marcy), University of North Georgia Department of Chemistry and Biochemistry, ...}
+\hl{David Yaron, Gregorie Montavon, Bucknell (Marcy), XSEDE (Blacklight, Gordon, Trestles), University of North Georgia Department of Chemistry and Biochemistry, ...}
 
 \nocite{ruddigkeit_enumeration_2012}
 \nocite{darley_beyond_2008}
@@ -549,5 +575,15 @@ The DFT calculations were done using the computing cluster \hl{Marcy from Buckne
 
 OTHER
 numpy, scipy, matplotlib
+
+All of the code and data for this paper can be found in the following two git repositories.
+
+All of the actual machine learning code:
+
+\url{http://www.github.com/crcollins/ML/}
+
+The code to generate benzobisazole structures/names:
+
+\url{http://www.github.com/crcollins/chemtools-webapp/}
 
 \end{document}
