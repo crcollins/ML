@@ -33,7 +33,11 @@
 % \doublespace
 \section{Introduction}
 
-There are many different molecule groups that are being looked at for use as organic solar cells \hl{[CITE]}. One such group is the benzobisazoles \hl{[CITE]}. To optimize the optoelectronic properties of molecules for use in solar cells, various electron donating and electron accepting groups are added to the structure to shift electron density. For testing all of the possible structures (even in small sets) this is not feasible in the lab. To reduce some of the time required, and to expand the total search space, computational methods such as density functional theory have been used to predict the properties of molecules fairly rapidly. Unfortunately, these calculations also have their own limits in the amount of structures that can be tested in a reasonable time frame.
+In recent years there has been a large interest in the creation of organic solar cells instead in lieu of their inorganic counterparts. The main driving reasons for such advancements are because organic solar cells are cheaper to manufacture, and they are also are \"cleaner\".
+\hl{Organic solar cells have been a hot topic in chemistry and material science research... much of the work involving permuting many different structures } \hl{150,000, 156,314 cores, 1.21 petaflops Mark Thompson USC}
+There are many different molecule groups that are being looked at for use as organic solar cells \hl{[CITE]}. The structures often are composed of many similar features such as polymeric structures and highly conjugated systems. One possible group of structures are the benzobisazoles \hl{[CITE]}. In previous work, various benzobisazoles have been shown to have interesting optoelectronic properties, thus making them viable for use as organic solar cells\hl{[CITE]}.
+
+To optimize the optoelectronic properties of molecules for use in solar cells, various electron donating and electron accepting groups are added to the structure to shift electron density. For testing all of the possible structures (even in small sets) this is not feasible in the lab. To reduce some of the time required, and to expand the total search space, computational methods such as density functional theory have been used to predict the properties of molecules fairly rapidly. Unfortunately, these calculations also have their own limits in the amount of structures that can be tested in a reasonable time frame.
  \hl{There are many possible molecules that could be used as organic solar cells, the problem is current organic solar cells have poor efficiency [CITE]. To attempt to search through all the possible compounds that could be used for organic solar cells computational methods are used to save time.}
 
 Density functional theory calculations have been used extensively to be able to predict the properties at a nice medium between the accuracy of \emph{ab inito} and the speed of semi empirical methods. Unfortunately, while they are faster than \emph{ab inito} calculations, DFT calculations still take a lot longer than to be desired. This problem is compounded when one of the of the interests in computational chemistry is being able to test molecules more quickly than could be done in the lab.
@@ -143,7 +147,7 @@ The bad thing about this kind of decay function is that it is not separable if $
 One problem with the first decay type feature vector is it makes the assumption that all the distances between are the same length. Since the effects of atoms are highly dependent on distance this sort of assumption is problematic for heterogeneous side groups. \eqref{decay2} \hl{Something something}. This normalizes all the lengths such that longer structures will increase the distance more than shorter structures.
 
 \begin{equation}\label{decay2}
-    V = \sum_i^n \left(A \left(\frac{d_i}{M_i}\right)^{-H} \right)^{p}
+    V = \sum_i^n \left[A \left(\frac{d_i}{M_i}\right)^{-H} \right]^{p}
 \end{equation}
 
 $M_i$ is a normalizing factor for each segment in the chain. By doing this, all the lengths are added to the chain are stored relative to the length of the first element in the chain. The problem with this feature vector is that it is not separable.
@@ -181,15 +185,17 @@ $$ finalLUMO = predict(Decay, newLUMO) $$
 $$ finalGAP = predict(Decay, newGAP) $$
 
 \subsection{Coulomb Matrix}
-(Montavon et al.)
+For the work by Montavon et al, they make use of a feature structure that depends on the atomic number, and the coordinates of each atom in the structure. From that, they construct a distance matrix of the following form of which they call the Coulomb Matrix.
+
 $$
 M_{ij} =
 \begin{cases}
-    0.5 Z_i^{2.4} &: i = j \\
-    \frac{Z_i Z_j}{|R_i - R_j|} &: i \ne j \\
+    0.5 Z_i^{2.4} & i = j \\
+    \frac{Z_i Z_j}{|R_i - R_j|} & i \ne j \\
 \end{cases}
 $$
 Specifically, to reduce the dimensionality Principal Component Analysis was used to reduce these vectors from 52,000 elements to 500 elements.
+
 
 (Take lower triangle and convert the matrix to a vector)
 $$M \rightarrow M_v$$
@@ -261,7 +267,9 @@ With the addition of predicted HOMO/LUMO/Band Gap energies for the decay feature
 
 Unexpectedly, the decay function with distance corrections did not perform any better than the regular decay feature vector. In theory, this should have worked better with heterogeneous side chains, but its use seemed to only increase the MAE. We think that the cause of this is due to the lack of sampling of largely heterogeneous side chains. So perhaps, if the same tests were done with only heterogeneous side chains adding the correction factor might decrease the total error.
 
-In the results there is a large increase in the performance of the linear models (linear regression and linear ridge regression) when using the decay vector with predictions. This can be largely accounted for the linear relation between the HOMO, the LUMO, and the Band Gap energy levels $$BandGap \approx 0.93 (LUMO - HOMO) - 0.15$$.
+In the results there is a large increase in the performance of the linear models (linear regression and linear ridge regression) when using the decay vector with predictions. This can be largely accounted for the linear relation between the HOMO, the LUMO, and the Band Gap energy levels.
+
+$$BandGap \approx 0.93 (LUMO - HOMO) - 0.15$$
 
 There were a few anomalies in the results. The most noticeable is the long tail distribution of errors. As one might expect, structures where features overlap ($A\_TON\_4ed\_A$, 0.5 eV) there were higher MAE values. Unfortunately, a few molecules within the set had unusually high band gap errors (ex: $8A\_TON\_A\_A$, 1.1 eV) and we have no explanation for why that occurred.
 
@@ -311,11 +319,11 @@ The methods presented here would be used as a first line filter to rule out larg
 
 \hl{In addition to the machine learning methods used in this study, there was also an attempt to use Neural Networks for the predictions. Unfortunately, the results were not satisfactory relative to the amount of time required (0.20 eV MAE). Drastic changes to the network made minimal differences to the final error. This is attributed to inexperience with proper methodologies with Neural Networks.}
 
-\hl{Also, the methods mentioned in }\cite{hansen_assessment_2013} \hl{were tested and the results were not as good as any of the other name based features (0.25-0.35 eV). In addition to the accuracy problems, it had severe performance problems because it relies on $O(n^2)$ elements in each feature vector where $n$ is the number of atoms in the structure. To save time, only structures with $<45$ atoms total were tested, leaving about 450 structures. Attempting the full data set is not feasible with all the structures/atoms. By using all the structures and using PCA to reduce the dimensionality down from 52,000 to 500 retains 99.97\% of the variability of the data (0.24 $\pm$ 0.04 eV MAE). To run the full data set it is expected to take on the order of 10s to 100s of days. (plus SVM does not work well when features >> samples)}
+\hl{Also, the methods mentioned in }\cite{hansen_assessment_2013} \hl{were tested and the results were not as good as any of the other name based features (0.25-0.35 eV). In addition to the accuracy problems, it had severe performance problems because it relies on $O(n^2)$ elements in each feature vector where $n$ is the number of atoms in the structure. To save time, only structures with $<45$ atoms total were tested, leaving about 450 structures. Attempting the full data set is not feasible with all the structures/atoms. By using all the structures and using PCA to reduce the dimensionality down from 52,000 to 500 retains 99.97\% of the variability of the data (0.24 $\pm$ 0.04 eV MAE). To run the full data set it is expected to take on the order of 10s to 100s of days. (plus SVM does not work well when $N_{features} >> N_{samples}$)}
 
 \section{Acknowledgments}
 
-\hl{David Yaron, Gregorie Montavon, Bucknell (Marcy), XSEDE (Blacklight, Gordon, Trestles), University of North Georgia Department of Chemistry and Biochemistry, ...}
+\hl{David Yaron, Gregorie Montavon, Bucknell (Marcy), XSEDE (Blacklight, Gordon, Trestles), University of North Georgia Department of Chemistry and Biochemistry, Carnegie Mellon Department of Chemistry, ...}
 
 \nocite{ruddigkeit_enumeration_2012}
 \nocite{darley_beyond_2008}
@@ -573,12 +581,11 @@ The methods presented here would be used as a first line filter to rule out larg
 
 The DFT calculations were done using the computing cluster \hl{Marcy from Bucknell} and Gaussian 09. The machine learning algorithms used were the ones implemented in the \hl{Scikit-Learn Python Library}. All of the machine learning calculations were done on a single consumer quad core computer.
 
-OTHER
 numpy, scipy, matplotlib
 
 All of the code and data for this paper can be found in the following two git repositories.
 
-All of the actual machine learning code:
+All of the machine learning code:
 
 \url{http://www.github.com/crcollins/ML/}
 
