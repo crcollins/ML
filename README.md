@@ -1,6 +1,6 @@
 ML
 ================
-A research repository for applying Machine Learning techniques to Benzobisazoles.
+A research repository for applying Machine Learning techniques to Benzobisazoles. Most of this code is purely experimental.
 
 _______________________________________________________________________
 Build/Run Requirements
