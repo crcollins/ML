@@ -4,6 +4,7 @@ import random
 from itertools import product
 
 import numpy
+from scipy.optimize import curve_fit
 
 from pybrain.tools.shortcuts import buildNetwork
 from pybrain.datasets import SupervisedDataSet
@@ -19,6 +20,7 @@ class NeuralNet(object):
         self.ds = None
         self.train_error = []
         self.test_error = []
+        self.norm_error = []
 
     def improve(self, n=10):
         trainer = BackpropTrainer(self.nn, self.ds)
@@ -67,6 +69,14 @@ class NeuralNet(object):
 
 
 
+def power_reg(x, a, b):
+    return a * x ** b
+
+def fit_it(errors):
+    x = numpy.arange(1,len(errors)+1)
+    y = numpy.array(errors)
+    (a, b), var_matrix = curve_fit(power_reg, x, y, p0=[1, -.5])
+    return a, b
 
 if __name__ == "__main__":
     data = []
@@ -144,9 +154,12 @@ if __name__ == "__main__":
         clf = NeuralNet(layers)
         clf.fit(XTrain, yTrain)
         clf.test_error.append(numpy.abs(clf.predict(XTest) - yTest).mean(0))
-        print -1, clf.test_error[-1], numpy.linalg.norm(clf.test_error[-1])
+        clf.norm_error.append(numpy.linalg.norm(clf.test_error[-1]))
+        print -1, clf.test_error[-1], clf.norm_error[-1]
         for i in xrange(100):
             clf.improve()
             clf.test_error.append(numpy.abs(clf.predict(XTest) - yTest).mean(0))
-            print i, clf.test_error[-1], numpy.linalg.norm(clf.test_error[-1])
+            clf.norm_error.append(numpy.linalg.norm(clf.test_error[-1]))
+            temp = fit_it(clf.norm_error)
+            print i, clf.test_error[-1], clf.norm_error[-1], temp[1]
         print
