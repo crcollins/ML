@@ -315,6 +315,8 @@ Another possible expansion of work would be to test with more properties of the 
 
 As an end goal, it would be nice to generalize these machine learning methods such that they could be used for any structure. \hl{The naming scheme described would not generalize to other structures, but perhaps a similar treatment of functional groups would lend itself to similar results.}
 
+Upon doing PCA on the binary feature vectors, it can be seen that the weights/influence for each of the substituents is directly related to its Hammet parameter value.
+
 The methods presented here would be used as a first line filter to rule out large amounts molecular structures that do not meet the desired requirements such that more time could be allocated only on the structures that show the most promise instead of relying on intuition. As can be seen by these methods speeds and relative accuracy, these machine learning methods work really well for this task. In the same amount of time that one could calculate a property of a structure using DFT the same property can be predicted here for millions of structures. From those structures one could imagine taking the best 1\% of the structures and running progressively more accurate methods.
 
 \hl{In addition to the machine learning methods used in this study, there was also an attempt to use Neural Networks for the predictions. Unfortunately, the results were not satisfactory relative to the amount of time required (0.20 eV MAE). Drastic changes to the network made minimal differences to the final error. This is attributed to inexperience with proper methodologies with Neural Networks.}
